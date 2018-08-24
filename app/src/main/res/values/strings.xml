@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">You Shop We Deliver</string>
+    <string name="app_name">Shopdrop</string>
+    <string name="retry">retry</string>
+    <string name="check_your_internet">Please check your internet connection.\nAnd try again</string>
+    <string name="welcome_to_shopdrop">Welcome to Shopdrop</string>
+    <string name="do_all_your_home_shopping">Do all your home shopping in one place conveniently.</string>
+    <string name="all_shopping_done">All your shopping list items are perfectly hand picked by our staff at the store</string>
+    <string name="all_shopping_delivered">Items are packaged and shipped to you within the shortest time possible</string>
+    <string name="welcome_to_shopdrop_enjoy">Welcome to Shopdrop\nHappy shopping :)</string>
+    <string name="terms">By signing in you agree to our <b>terms and conditions</b></string>
 
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
