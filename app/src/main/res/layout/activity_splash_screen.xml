@@ -4,12 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
     tools:context=".SplashScreenActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash_background" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/intro_gradient" />
 
     <ImageView
         android:id="@+id/logo"
@@ -39,7 +45,7 @@
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
+        android:layout_margin="50dp"
         android:visibility="visible"
         app:indicatorColor="@color/white"
         app:indicatorName="PacmanIndicator" />

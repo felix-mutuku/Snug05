@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -24,6 +23,10 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+import static android.Manifest.permission.VIBRATE;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -154,6 +157,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                 ACCESS_NETWORK_STATE,
                 ACCESS_FINE_LOCATION,
                 ACCESS_COARSE_LOCATION,
+                READ_SMS,
+                READ_PHONE_STATE,
+                READ_PHONE_NUMBERS,
+                VIBRATE
         }, RequestPermissionCode);
 
     }
@@ -181,9 +188,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
                         toastMessage.setGravity(Gravity.CENTER);
                         toastMessage.setCompoundDrawablePadding(10);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
-                        }
+                        toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
                         toast.show();
 
                         goToNext();
@@ -197,9 +202,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
                         toastMessage.setGravity(Gravity.CENTER);
                         toastMessage.setCompoundDrawablePadding(10);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
-                        }
+                        toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
                         toast.show();
 
                         finish();
@@ -210,17 +213,28 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    //Checking permission is enabled or not using function starts from here.
+    //Checking permission is enabled or not
     public boolean CheckingPermissionIsEnabledOrNot() {
         int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), INTERNET);
         int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_NETWORK_STATE);
         int ThirdPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION);
         int FourthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_COARSE_LOCATION);
+        int FifthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_SMS);
+        int SixthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_PHONE_STATE);
+        int SeventhPermissionResult = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            SeventhPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_PHONE_NUMBERS);
+        }
+        int EighthPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), VIBRATE);
 
         return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 SecondPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 ThirdPermissionResult == PackageManager.PERMISSION_GRANTED &&
-                FourthPermissionResult == PackageManager.PERMISSION_GRANTED;
+                FourthPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                FifthPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                SixthPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                SeventhPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                EighthPermissionResult == PackageManager.PERMISSION_GRANTED;
     }
 
     private void goToNext() {
@@ -228,13 +242,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         isFirstStart = getSharedPreferences.getBoolean("firstStart", true);
 
         if (isFirstStart) {
+            //user has not viewed intro
             Intent i = new Intent(SplashScreenActivity.this, IntroActivity.class);
             startActivity(i);
             SharedPreferences.Editor e = getSharedPreferences.edit();
             e.putBoolean("firstStart", false);
             e.apply();
         } else {
-            Intent intent = new Intent(SplashScreenActivity.this, IntroActivity.class);
+            //user already viewed intro
+            Intent intent = new Intent(SplashScreenActivity.this, LoginSignUpActivity.class);
             SplashScreenActivity.this.startActivity(intent);
             finish();
         }

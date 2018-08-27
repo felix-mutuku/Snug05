@@ -8,5 +8,15 @@
     <string name="all_shopping_delivered">Items are packaged and shipped to you within the shortest time possible</string>
     <string name="welcome_to_shopdrop_enjoy">Welcome to Shopdrop\nHappy shopping :)</string>
     <string name="terms">By signing in you agree to our <b>terms and conditions</b></string>
+    <string name="no_passwords">It\'s easy, no need for passwords</string>
+    <string name="input_phone_number">Your Mobile Number</string>
+    <string name="input_email">Your Email Address</string>
+    <string name="your_name">Your Name</string>
+    <string name="confirm_details">Confirm Details</string>
+    <string name="you_re_almost_done">Confirm details and start shopping</string>
+    <string name="create_google_account">You have to create a <b>Google Account</b> to login</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="invalid_number">Phone number is invalid !</string>
+    <string name="input_country">Your Current Country</string>
 
 </resources>
