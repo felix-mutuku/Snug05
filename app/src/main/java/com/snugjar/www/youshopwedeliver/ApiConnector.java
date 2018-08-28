@@ -7,6 +7,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -50,5 +52,53 @@ public class ApiConnector {
         }
 
         return response;
+    }
+
+    //used to get all the supermarkets in that country for that day
+    public JSONArray GetAvailableSupermarkets(String country) {
+        String url = Constants.BASE_URL_LOGIC + "getAvailableSupermarkets.php?country=" + country;
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonArray = null;
+        if (httpEntity != null) {
+            try {
+                String entityResponse = EntityUtils.toString(httpEntity);
+                jsonArray = new JSONArray(entityResponse);
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
+
+    //used to get specific details about the celebration selected
+    public JSONArray GetCelebrationsDetails(int DayID) {
+        String url = Constants.BASE_URL_LOGIC + "getCelebrationDetails.php?dayID=" + DayID;
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonArray = null;
+        if (httpEntity != null) {
+            try {
+                String entityResponse = EntityUtils.toString(httpEntity);
+                jsonArray = new JSONArray(entityResponse);
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
     }
 }
