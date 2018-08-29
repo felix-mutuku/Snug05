@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foregroundGravity="center"
-        app:cardBackgroundColor="#90ffffff"
+        app:cardBackgroundColor="#77ffffff"
         app:cardCornerRadius="15dp">
 
         <RelativeLayout
@@ -27,12 +27,12 @@
                 android:id="@+id/supermarket_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_button"
                 android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:lineSpacingExtra="5dp"
                 android:lines="1"
                 android:paddingEnd="15dp"

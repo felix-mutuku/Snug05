@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@drawable/intro_gradient">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,4 +44,22 @@
             app:fontFamily="@font/gothamrounded" />
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="175dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="start"
+        android:src="@drawable/bread_slices"
+        app:layout_anchorGravity="left|bottom" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="175dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:src="@drawable/milk_carton"
+        app:layout_anchorGravity="right|bottom" />
 </RelativeLayout>

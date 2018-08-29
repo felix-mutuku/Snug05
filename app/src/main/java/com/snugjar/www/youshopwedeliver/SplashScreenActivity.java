@@ -245,6 +245,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             //user has not viewed intro
             Intent i = new Intent(SplashScreenActivity.this, IntroActivity.class);
             startActivity(i);
+            finish();
             SharedPreferences.Editor e = getSharedPreferences.edit();
             e.putBoolean("firstStart", false);
             e.apply();

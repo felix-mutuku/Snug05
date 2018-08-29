@@ -79,7 +79,7 @@ public class ApiConnector {
     }
 
     //used to get specific details about the celebration selected
-    public JSONArray GetCelebrationsDetails(int DayID) {
+    public JSONArray GetUserDetails(int DayID) {
         String url = Constants.BASE_URL_LOGIC + "getCelebrationDetails.php?dayID=" + DayID;
         HttpEntity httpEntity = null;
         try {
@@ -100,5 +100,57 @@ public class ApiConnector {
             }
         }
         return jsonArray;
+    }
+
+    //used to check whether user already exists in database
+    String CheckExistingUser(String personID) {
+        String url = Constants.BASE_URL_LOGIC + "checkExistingUser.php?personID=" + personID;
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String response = null;
+
+        if (httpEntity != null) {
+            try {
+                response = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return response;
+    }
+
+    //used to check whether mobile number already exists in database
+    String CheckUserMobile(String mobile) {
+        String url = Constants.BASE_URL_LOGIC + "checkUserMobile.php?mobile=" + mobile;
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String response = null;
+
+        if (httpEntity != null) {
+            try {
+                response = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return response;
     }
 }

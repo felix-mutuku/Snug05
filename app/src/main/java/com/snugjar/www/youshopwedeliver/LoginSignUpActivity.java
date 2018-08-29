@@ -24,7 +24,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -47,6 +48,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class LoginSignUpActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
@@ -126,9 +128,10 @@ public class LoginSignUpActivity extends AppCompatActivity {
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
+            //Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
             //updateUI(null);
-            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Sorry, an error occurred :(\nPlease try again later.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Sorry, an error occurred :" +
+                    "(\nPlease try again later.", Toast.LENGTH_LONG);
             View toastView = toast.getView(); //This'll return the default View of
             //the Toast.
             TextView toastMessage = toastView.findViewById(android.R.id.message);
@@ -139,6 +142,9 @@ public class LoginSignUpActivity extends AppCompatActivity {
             toastMessage.setCompoundDrawablePadding(10);
             toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
             toast.show();
+
+            loading.setVisibility(View.GONE);
+            signInButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -169,11 +175,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
         signInButton.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
         //this is a return user, do the appropriate for the UI
-        //this is a return user on google
+        //this is a return user on google ask to confirm google details
         Sname = account.getDisplayName();
         Semail = account.getEmail();
-        SpersonID = account.getId();
         Sphoto = account.getPhotoUrl();
+        SpersonID = account.getId();
 
         try {
             Sphone = getPhoneNumber();
@@ -181,6 +187,241 @@ public class LoginSignUpActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        new CheckExistingUser().execute(new ApiConnector());
+    }
+
+    private String getPhoneNumber() {
+        String phone_number = "null";
+
+        TelephonyManager phoneMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS)
+                        != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) !=
+                        PackageManager.PERMISSION_GRANTED) {
+
+            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Please enable all permissions" +
+                    " requested by the application", Toast.LENGTH_LONG);
+            View toastView = toast.getView(); //This'll return the default View of
+            //the Toast.
+            TextView toastMessage = toastView.findViewById(android.R.id.message);
+            toastMessage.setTextSize(12);
+            toastMessage.setTextColor(getResources().getColor(R.color.white));
+            toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+            toastMessage.setGravity(Gravity.CENTER);
+            toastMessage.setCompoundDrawablePadding(10);
+            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+            toast.show();
+        }
+
+        if (phoneMgr != null) {
+            phone_number = phoneMgr.getLine1Number();
+            phone_IMEI = phoneMgr.getDeviceId();
+        }
+
+        return phone_number;
+    }
+
+    private void showToastEditInGoogle() {
+        Toast toast = Toast.makeText(LoginSignUpActivity.this, "Please edit this in your Google " +
+                "Account", Toast.LENGTH_SHORT);
+        View toastView = toast.getView(); //This'll return the default View of
+        //the Toast.
+        TextView toastMessage = toastView.findViewById(android.R.id.message);
+        toastMessage.setTextSize(12);
+        toastMessage.setTextColor(getResources().getColor(R.color.white));
+        toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+        toastMessage.setGravity(Gravity.CENTER);
+        toastMessage.setCompoundDrawablePadding(10);
+        toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+        toast.show();
+    }
+
+    public void getCountry(Context context) {
+        String country;
+        LocationManager locationManager = (LocationManager) getSystemService(Context
+                .LOCATION_SERVICE);
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(LoginSignUpActivity.this, Manifest.permission
+                    .ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(LoginSignUpActivity.this, Manifest
+                            .permission.ACCESS_COARSE_LOCATION) != PackageManager
+                            .PERMISSION_GRANTED) {
+                Toast toast = Toast.makeText(context, "Please enable all permissions requested by" +
+                        " the application", Toast.LENGTH_LONG);
+                View toastView = toast.getView(); //This'll return the default View of
+                //the Toast.
+                TextView toastMessage = toastView.findViewById(android.R.id.message);
+                toastMessage.setTextSize(12);
+                toastMessage.setTextColor(getResources().getColor(R.color.white));
+                toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                toastMessage.setGravity(Gravity.CENTER);
+                toastMessage.setCompoundDrawablePadding(10);
+                toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                toast.show();
+            }
+
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location == null) {
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            } else {
+                Geocoder gcd = new Geocoder(context, Locale.getDefault());
+                List<Address> addresses;
+                try {
+                    addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude
+                            (), 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        country = addresses.get(0).getCountryName();
+                        if (country != null) {
+                            Scountry = country;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        country = getCountryBasedOnSimCardOrNetwork(context);
+        if (country != null) {
+            Scountry = country;
+        }
+    }
+
+    private static String getCountryBasedOnSimCardOrNetwork(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context
+                    .TELEPHONY_SERVICE);
+            final String simCountry = tm.getSimCountryIso();
+            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                return simCountry.toLowerCase(Locale.US);
+            } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not
+                // 3G (would be unreliable)
+                String networkCountry = tm.getNetworkCountryIso();
+                if (networkCountry != null && networkCountry.length() == 2) { // network country
+                    // code is available
+                    return networkCountry.toLowerCase(Locale.US);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class registerUser extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            Stype = "end_user";
+            return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto,
+                    SpersonID, phone_IMEI);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            try {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app
+                        .AlertDialog.Builder(LoginSignUpActivity.this);
+
+                if (response.equals("Successful")) {
+                    loading.setVisibility(View.INVISIBLE);
+                    Toast toast = Toast.makeText(LoginSignUpActivity.this, "You are Now " +
+                            "Registered :)", Toast.LENGTH_LONG);
+                    View toastView = toast.getView(); //This'll return the default View of the
+                    // Toast.
+                    TextView toastMessage = toastView.findViewById(android.R.id.message);
+                    toastMessage.setTextSize(12);
+                    toastMessage.setTextColor(getResources().getColor(R.color.white));
+                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0,
+                            0, 0);
+                    toastMessage.setGravity(Gravity.CENTER);
+                    toastMessage.setCompoundDrawablePadding(10);
+                    toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                    toast.show();
+
+                    goToMain();
+                } else {
+                    loading.setVisibility(View.INVISIBLE);
+                    signInButton.setVisibility(View.VISIBLE);
+
+                    builder.setMessage(response + "\n\nTry again?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new registerUser().execute(new ApiConnector());
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                    dialog.dismiss();
+                                }
+                            });
+                    builder.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void checkLoginStatus() {
+        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences
+                (getBaseContext());
+        isLoggedin = getSharedPreferences.getBoolean("isLoggedin", false);
+
+        if (isLoggedin) {
+            //user has already logged in
+            Intent i = new Intent(LoginSignUpActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
+    private void goToMain() {
+        //save login session for user
+        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor e = getSharedPreferences.edit();
+        e.putBoolean("isLoggedin", true);
+        e.apply();
+        //go to main activity after user has finished successfully
+        Intent i = new Intent(LoginSignUpActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class CheckExistingUser extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].CheckExistingUser(SpersonID);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            try {
+
+                if (Objects.equals(response, "Exist")) {
+                    //user already in database, proceed to main
+                    goToMain();
+                } else {
+                    //user absent in database, confirm details first
+                    displayConfirmDialog();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void displayConfirmDialog() {
         //declaring the dialog items displayed
         dialog = new Dialog(LoginSignUpActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -196,6 +437,31 @@ public class LoginSignUpActivity extends AppCompatActivity {
         final EditText personPhone = dialog.findViewById(R.id.personPhone);
         final Button confirm_details = dialog.findViewById(R.id.confirm_details);
         final AVLoadingIndicatorView loading_dialog = dialog.findViewById(R.id.loading_dialog);
+
+        //making sure numbers entered have "254" in them
+        personPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String enteredString = s.toString();
+                if (enteredString.startsWith("0")) {
+                    personPhone.setText("254" + enteredString.substring(1));
+                    personPhone.setSelection(personPhone.getText().length());
+                }else if(enteredString.startsWith("+")){
+                    personPhone.setText("254" + enteredString.substring(4));
+                    personPhone.setSelection(personPhone.getText().length());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //before typing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //after typing
+            }
+        });
 
         //setting all the data for the UI
         Glide
@@ -214,39 +480,83 @@ public class LoginSignUpActivity extends AppCompatActivity {
         }
 
         confirm_details.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //confirm all the details entered by the user and send data to database
-                try {
-                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            //checking if user mobile number already exists in the database
+            @SuppressLint("StaticFieldLeak")
+            class CheckUserMobile extends AsyncTask<ApiConnector, Long, String> {
+                @Override
+                protected String doInBackground(ApiConnector... params) {
+                    //it is executed on Background thread
+                    return params[0].CheckUserMobile(Sphone);
                 }
 
-                if (personPhone.length() > 0) {
-                    //name not empty
-                    if (personPhone.length() > 12) {
-                        String SpersonPhone = personPhone.getText().toString();
-                        if (PhoneNumberUtils.isGlobalPhoneNumber(SpersonPhone)) {
-                            //hide UI elements to avoid HTTP collusion
-                            loading_dialog.setVisibility(View.VISIBLE);
-                            confirm_details.setVisibility(View.INVISIBLE);
-                            close_dialog.setVisibility(View.INVISIBLE);
-                            //send confirmed data to database
-                            new registerUser().execute(new ApiConnector());
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                protected void onPostExecute(String response) {
+                    try {
+                        if (Objects.equals(response, "Exist")) {
+                            //entered phone number is already in the database
+                            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Phone number already registered !!\nType a different phone number.", Toast.LENGTH_LONG);
+                            View toastView = toast.getView(); //This'll return the default View of the Toast.
+                            TextView toastMessage = toastView.findViewById(android.R.id.message);
+                            toastMessage.setTextSize(12);
+                            toastMessage.setTextColor(getResources().getColor(R.color.white));
+                            toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                            toastMessage.setGravity(Gravity.CENTER);
+                            toastMessage.setCompoundDrawablePadding(10);
+                            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                            toast.show();
+                            //return UI to normal state
+                            loading_dialog.setVisibility(View.GONE);
+                            confirm_details.setVisibility(View.VISIBLE);
+                            close_dialog.setVisibility(View.VISIBLE);
                         } else {
-                            //number is not a valid phone number
-                            personPhone.setError("Phone number is invalid");
+                            //number entered isn't in the database, proceed to adding user to Database
+                            //confirm all the details entered by the user and send data to database
+                            try {
+                                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (personPhone.length() > 0) {
+                                //name not empty
+                                if (personPhone.length() > 12) {
+                                    String SpersonPhone = personPhone.getText().toString();
+                                    if (PhoneNumberUtils.isGlobalPhoneNumber(SpersonPhone)) {
+                                        //hide UI elements to avoid HTTP collusion
+                                        loading_dialog.setVisibility(View.VISIBLE);
+                                        confirm_details.setVisibility(View.INVISIBLE);
+                                        close_dialog.setVisibility(View.INVISIBLE);
+                                        //send confirmed data to database
+                                        new registerUser().execute(new ApiConnector());
+                                    } else {
+                                        //number is not a valid phone number
+                                        personPhone.setError("Phone number is invalid");
+                                    }
+                                } else {
+                                    //number too short
+                                    personPhone.setError("Phone number too short");
+                                }
+                            } else {
+                                //number is empty
+                                personPhone.setError("Please fill your phone number");
+                            }
                         }
-                    } else {
-                        //number too short
-                        personPhone.setError("Phone number too short");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    //number is empty
-                    personPhone.setError("Please fill your phone number");
                 }
+            }
+
+            @Override
+            public void onClick(View v) {
+                //check whether entered number is already in database
+                loading_dialog.setVisibility(View.VISIBLE);
+                confirm_details.setVisibility(View.INVISIBLE);
+                close_dialog.setVisibility(View.INVISIBLE);
+                new CheckUserMobile().execute(new ApiConnector());
             }
         });
 
@@ -283,189 +593,5 @@ public class LoginSignUpActivity extends AppCompatActivity {
         });
 
         dialog.show();
-    }
-
-    private String getPhoneNumber() {
-        String phone_number = "null";
-
-        TelephonyManager phoneMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Please enable all permissions requested by the application", Toast.LENGTH_LONG);
-            View toastView = toast.getView(); //This'll return the default View of
-            //the Toast.
-            TextView toastMessage = toastView.findViewById(android.R.id.message);
-            toastMessage.setTextSize(12);
-            toastMessage.setTextColor(getResources().getColor(R.color.white));
-            toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
-            toastMessage.setGravity(Gravity.CENTER);
-            toastMessage.setCompoundDrawablePadding(10);
-            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
-            toast.show();
-        }
-
-        if (phoneMgr != null) {
-            phone_number = phoneMgr.getLine1Number();
-            phone_IMEI = phoneMgr.getDeviceId();
-        }
-
-        return phone_number;
-    }
-
-    private void showToastEditInGoogle() {
-        Toast toast = Toast.makeText(LoginSignUpActivity.this, "Please edit this in your Google Account", Toast.LENGTH_SHORT);
-        View toastView = toast.getView(); //This'll return the default View of
-        //the Toast.
-        TextView toastMessage = toastView.findViewById(android.R.id.message);
-        toastMessage.setTextSize(12);
-        toastMessage.setTextColor(getResources().getColor(R.color.white));
-        toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
-        toastMessage.setGravity(Gravity.CENTER);
-        toastMessage.setCompoundDrawablePadding(10);
-        toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
-        toast.show();
-    }
-
-    public void getCountry(Context context) {
-        String country;
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            if (ActivityCompat.checkSelfPermission(LoginSignUpActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(LoginSignUpActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast toast = Toast.makeText(context, "Please enable all permissions requested by the application", Toast.LENGTH_LONG);
-                View toastView = toast.getView(); //This'll return the default View of
-                //the Toast.
-                TextView toastMessage = toastView.findViewById(android.R.id.message);
-                toastMessage.setTextSize(12);
-                toastMessage.setTextColor(getResources().getColor(R.color.white));
-                toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
-                toastMessage.setGravity(Gravity.CENTER);
-                toastMessage.setCompoundDrawablePadding(10);
-                toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
-                toast.show();
-            }
-
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location == null) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            } else {
-                Geocoder gcd = new Geocoder(context, Locale.getDefault());
-                List<Address> addresses;
-                try {
-                    addresses = gcd.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    if (addresses != null && !addresses.isEmpty()) {
-                        country = addresses.get(0).getCountryName();
-                        if (country != null) {
-                            Scountry = country;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        country = getCountryBasedOnSimCardOrNetwork(context);
-        if (country != null) {
-            Scountry = country;
-        }
-    }
-
-    private static String getCountryBasedOnSimCardOrNetwork(Context context) {
-        try {
-            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            final String simCountry = tm.getSimCountryIso();
-            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
-                return simCountry.toLowerCase(Locale.US);
-            } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
-                String networkCountry = tm.getNetworkCountryIso();
-                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
-                    return networkCountry.toLowerCase(Locale.US);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private class registerUser extends AsyncTask<ApiConnector, Long, String> {
-        @Override
-        protected String doInBackground(ApiConnector... params) {
-            //it is executed on Background thread
-            Stype = "end_user";
-            return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        @Override
-        protected void onPostExecute(String response) {
-            try {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(LoginSignUpActivity.this);
-
-                if (response.equals("Successful")) {
-                    loading.setVisibility(View.INVISIBLE);
-                    Toast toast = Toast.makeText(LoginSignUpActivity.this, "You are Now Registered :)", Toast.LENGTH_LONG);
-                    View toastView = toast.getView(); //This'll return the default View of the Toast.
-                    TextView toastMessage = toastView.findViewById(android.R.id.message);
-                    toastMessage.setTextSize(12);
-                    toastMessage.setTextColor(getResources().getColor(R.color.white));
-                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
-                    toastMessage.setGravity(Gravity.CENTER);
-                    toastMessage.setCompoundDrawablePadding(10);
-                    toastView.setBackground(getResources().getDrawable(R.drawable.bg_button2));
-                    toast.show();
-
-                    goToMain();
-                } else {
-                    loading.setVisibility(View.INVISIBLE);
-                    signInButton.setVisibility(View.VISIBLE);
-
-                    builder.setMessage(response + "\n\nTry again?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    new registerUser().execute(new ApiConnector());
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // User cancelled the dialog
-                                    dialog.dismiss();
-                                }
-                            });
-                    builder.show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void checkLoginStatus() {
-        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        isLoggedin = getSharedPreferences.getBoolean("isLoggedin", false);
-
-        if (isLoggedin) {
-            //user has already logged in
-            Intent i = new Intent(LoginSignUpActivity.this, MainActivity.class);
-            startActivity(i);
-            finish();
-        }
-    }
-
-    private void goToMain() {
-        //save login session for user
-        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor e = getSharedPreferences.edit();
-        e.putBoolean("isLoggedin", true);
-        e.apply();
-        //go to main activity after user has finished successfully
-        Intent i = new Intent(LoginSignUpActivity.this, MainActivity.class);
-        startActivity(i);
-        finish();
     }
 }
