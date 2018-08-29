@@ -521,7 +521,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
                             if (personPhone.length() > 0) {
                                 //name not empty
-                                if (personPhone.length() > 12) {
+                                if (personPhone.length() > 11) {
                                     String SpersonPhone = personPhone.getText().toString();
                                     if (PhoneNumberUtils.isGlobalPhoneNumber(SpersonPhone)) {
                                         //hide UI elements to avoid HTTP collusion
@@ -533,14 +533,26 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                     } else {
                                         //number is not a valid phone number
                                         personPhone.setError("Phone number is invalid");
+                                        //return UI to normal state
+                                        loading_dialog.setVisibility(View.GONE);
+                                        confirm_details.setVisibility(View.VISIBLE);
+                                        close_dialog.setVisibility(View.VISIBLE);
                                     }
                                 } else {
                                     //number too short
                                     personPhone.setError("Phone number too short");
+                                    //return UI to normal state
+                                    loading_dialog.setVisibility(View.GONE);
+                                    confirm_details.setVisibility(View.VISIBLE);
+                                    close_dialog.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 //number is empty
                                 personPhone.setError("Please fill your phone number");
+                                //return UI to normal state
+                                loading_dialog.setVisibility(View.GONE);
+                                confirm_details.setVisibility(View.VISIBLE);
+                                close_dialog.setVisibility(View.VISIBLE);
                             }
                         }
 
