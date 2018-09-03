@@ -90,6 +90,7 @@
             android:fontFamily="@font/gothamrounded"
             android:gravity="center"
             android:focusable="false"
+            android:text="ke"
             android:hint="@string/input_country"
             android:inputType="none"
             android:textColor="@color/black"

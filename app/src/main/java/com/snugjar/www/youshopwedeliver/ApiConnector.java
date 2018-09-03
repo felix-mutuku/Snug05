@@ -153,4 +153,28 @@ public class ApiConnector {
 
         return response;
     }
+
+    //used to get specific details about the celebration selected
+    public JSONArray GetUserInformation(String personID) {
+        String url = Constants.BASE_URL_LOGIC + "getUserInformation.php?personID=" + personID;
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONArray jsonArray = null;
+        if (httpEntity != null) {
+            try {
+                String entityResponse = EntityUtils.toString(httpEntity);
+                jsonArray = new JSONArray(entityResponse);
+            } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
 }

@@ -317,8 +317,26 @@ public class LoginSignUpActivity extends AppCompatActivity {
         protected String doInBackground(ApiConnector... params) {
             //it is executed on Background thread
             Stype = "end_user";
-            return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto,
-                    SpersonID, phone_IMEI);
+
+            if (Sname != null &&
+                    Semail != null &&
+                    Sphone != null &&
+                    Scountry != null &&
+                    Sphoto != null &&
+                    SpersonID != null &&
+                    phone_IMEI != null) {
+                //all automatic entries picked well without errors
+                return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
+            }else if (Scountry == null &&
+                    phone_IMEI == null){
+                //automatic entries failed to pick automatically
+                Scountry = "ke";
+                phone_IMEI = "0123456789";
+
+                return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
+            }
+
+            return null;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -370,8 +388,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
     }
 
     private void checkLoginStatus() {
-        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences
-                (getBaseContext());
+        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         isLoggedin = getSharedPreferences.getBoolean("isLoggedin", false);
 
         if (isLoggedin) {
@@ -388,10 +405,20 @@ public class LoginSignUpActivity extends AppCompatActivity {
         SharedPreferences.Editor e = getSharedPreferences.edit();
         e.putBoolean("isLoggedin", true);
         e.apply();
+
+        addInfoToSharedPreference();
+
         //go to main activity after user has finished successfully
         Intent i = new Intent(LoginSignUpActivity.this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private void addInfoToSharedPreference() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.PERSON_ID, SpersonID);
+        editor.apply();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -446,7 +473,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 if (enteredString.startsWith("0")) {
                     personPhone.setText("254" + enteredString.substring(1));
                     personPhone.setSelection(personPhone.getText().length());
-                }else if(enteredString.startsWith("+")){
+                } else if (enteredString.startsWith("+")) {
                     personPhone.setText("254" + enteredString.substring(4));
                     personPhone.setSelection(personPhone.getText().length());
                 }
@@ -495,7 +522,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     try {
                         if (Objects.equals(response, "Exist")) {
                             //entered phone number is already in the database
-                            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Phone number already registered !!\nType a different phone number.", Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(LoginSignUpActivity.this, "Phone number already registered !!\nType a different phone " +
+                                    "number.", Toast.LENGTH_LONG);
                             View toastView = toast.getView(); //This'll return the default View of the Toast.
                             TextView toastMessage = toastView.findViewById(android.R.id.message);
                             toastMessage.setTextSize(12);
