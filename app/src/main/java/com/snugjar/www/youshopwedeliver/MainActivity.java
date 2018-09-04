@@ -3,6 +3,7 @@ package com.snugjar.www.youshopwedeliver;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -15,11 +16,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,9 +36,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,13 +51,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ImageView settings, adImage;
     EditText user_location;
     TextView supermarkets, orders, about, help, feedback, share_app, adQuestion, adHeadline, adOffer;
-    String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone;
+    String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone;
     Dialog loading_dialog, profile_dialog, play_services_dialog;
     GoogleApiClient mGoogleApiClient;
     Location mLocation;
     private LocationRequest mLocationRequest;
-    private long UPDATE_INTERVAL = 15000;
-    private long FASTEST_INTERVAL = 5000;
+    private long UPDATE_INTERVAL = 30000;//30 seconds
+    private long FASTEST_INTERVAL = 15000;//15 seconds
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
@@ -80,10 +91,238 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 //Show profile dialog
-
+                showProfileDialog();
             }
         });
 
+    }
+
+    private void showProfileDialog() {
+        //customise profile dialog
+        profile_dialog = new Dialog(MainActivity.this);
+        profile_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        profile_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        profile_dialog.setCancelable(false);
+        profile_dialog.setContentView(R.layout.dialog_profile);
+
+        final ImageView close_dialog = profile_dialog.findViewById(R.id.close_dialog);
+        TextView personCountry = profile_dialog.findViewById(R.id.personCountry);
+        CircleImageView profile_image = profile_dialog.findViewById(R.id.profile_image);
+        EditText personName = profile_dialog.findViewById(R.id.personName);
+        EditText personEmail = profile_dialog.findViewById(R.id.personEmail);
+        EditText personJoinDate = profile_dialog.findViewById(R.id.personJoinDate);
+        final EditText personPhone = profile_dialog.findViewById(R.id.personPhone);
+        final AVLoadingIndicatorView loading_dialog = profile_dialog.findViewById(R.id.loading_dialog);
+        final Button save_details = profile_dialog.findViewById(R.id.save_details);
+
+        save_details.setVisibility(View.GONE);
+
+        //load profile picture and details
+        Glide
+                .with(MainActivity.this)
+                .load(SImage)
+                .error(R.drawable.logo)
+                .crossFade()
+                .into(profile_image);
+
+        personName.setText(SName);
+        personEmail.setText(SEmail);
+        personCountry.setText(SCountry);
+        personPhone.setText(SPhone);
+        personJoinDate.setText(String.format("From %s to Present", SJoinDate));
+
+        //checking whether user has changed original stored phone number
+        personPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String enteredString = s.toString();
+                //making number start with 254
+                if (enteredString.startsWith("0")) {
+                    personPhone.setText("254" + enteredString.substring(1));
+                    personPhone.setSelection(personPhone.getText().length());
+                } else if (enteredString.startsWith("+")) {
+                    personPhone.setText("254" + enteredString.substring(4));
+                    personPhone.setSelection(personPhone.getText().length());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //before typing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //after typing
+                //check for changes in phone number
+                CSPhone = personPhone.getText().toString();
+                if (!CSPhone.equals(SPhone)) {
+                    save_details.setVisibility(View.VISIBLE);
+                } else {
+                    save_details.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //close dialog without saving
+                profile_dialog.dismiss();
+                getUserInfoFromPreferences();
+            }
+        });
+
+        save_details.setOnClickListener(new View.OnClickListener() {
+            //checking if user mobile number already exists in the database
+            @SuppressLint("StaticFieldLeak")
+            class CheckUserMobile extends AsyncTask<ApiConnector, Long, String> {
+                @Override
+                protected String doInBackground(ApiConnector... params) {
+                    //it is executed on Background thread
+                    return params[0].CheckUserMobile(SPhone);
+                }
+
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                protected void onPostExecute(String response) {
+                    try {
+                        if (Objects.equals(response, "Exist")) {
+                            //entered phone number is already in the database
+                            Toast toast = Toast.makeText(MainActivity.this, "Phone number already registered !!\nType a different phone " +
+                                    "number.", Toast.LENGTH_LONG);
+                            View toastView = toast.getView(); //This'll return the default View of the Toast.
+                            TextView toastMessage = toastView.findViewById(android.R.id.message);
+                            toastMessage.setTextSize(12);
+                            toastMessage.setTextColor(getResources().getColor(R.color.white));
+                            toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                            toastMessage.setGravity(Gravity.CENTER);
+                            toastMessage.setCompoundDrawablePadding(10);
+                            toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                            toast.show();
+                            //return UI to normal state
+                            loading_dialog.setVisibility(View.GONE);
+                            save_details.setVisibility(View.VISIBLE);
+                            close_dialog.setVisibility(View.VISIBLE);
+                        } else {
+                            //number entered isn't in the database, proceed to adding user to Database
+                            //confirm all the details entered by the user and send data to database
+                            try {
+                                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (personPhone.length() > 0) {
+                                //name not empty
+                                if (personPhone.length() > 11) {
+                                    SPhone = personPhone.getText().toString();
+                                    if (PhoneNumberUtils.isGlobalPhoneNumber(SPhone)) {
+                                        //hide UI elements to avoid HTTP collusion
+                                        loading_dialog.setVisibility(View.VISIBLE);
+                                        save_details.setVisibility(View.INVISIBLE);
+                                        close_dialog.setVisibility(View.INVISIBLE);
+                                        //send confirmed data to database
+                                        new updateUser().execute(new ApiConnector());
+                                    } else {
+                                        //number is not a valid phone number
+                                        personPhone.setError("Phone number is invalid");
+                                        //return UI to normal state
+                                        loading_dialog.setVisibility(View.GONE);
+                                        save_details.setVisibility(View.VISIBLE);
+                                        close_dialog.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    //number too short
+                                    personPhone.setError("Phone number too short");
+                                    //return UI to normal state
+                                    loading_dialog.setVisibility(View.GONE);
+                                    save_details.setVisibility(View.VISIBLE);
+                                    close_dialog.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                //number is empty
+                                personPhone.setError("Please fill your phone number");
+                                //return UI to normal state
+                                loading_dialog.setVisibility(View.GONE);
+                                save_details.setVisibility(View.VISIBLE);
+                                close_dialog.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onClick(View v) {
+                //save if user has made any changes
+                loading_dialog.setVisibility(View.VISIBLE);
+                save_details.setVisibility(View.INVISIBLE);
+                close_dialog.setVisibility(View.INVISIBLE);
+                //update phone number string
+                SPhone = personPhone.getText().toString();
+                new CheckUserMobile().execute(new ApiConnector());
+            }
+        });
+
+        profile_dialog.show();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class updateUser extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            //Scountry = Scountry.toUpperCase();//make the country code all caps
+            return params[0].UpdateUser(SpersonID, SPhone);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            try {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+
+                if (response.equals("Successful")) {
+                    Toast toast = Toast.makeText(MainActivity.this, "Your profile has been updated :)", Toast.LENGTH_LONG);
+                    View toastView = toast.getView(); //This'll return the default View of the
+                    // Toast.
+                    TextView toastMessage = toastView.findViewById(android.R.id.message);
+                    toastMessage.setTextSize(12);
+                    toastMessage.setTextColor(getResources().getColor(R.color.white));
+                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                    toastMessage.setGravity(Gravity.CENTER);
+                    toastMessage.setCompoundDrawablePadding(10);
+                    toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                    toast.show();
+
+                    //dismiss dialog after finishing and update shared preferences
+                    profile_dialog.dismiss();
+                    getUserInfoFromPreferences();
+                } else {
+                    builder.setMessage("An error occurred :(\nTry again?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new updateUser().execute(new ApiConnector());
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                    profile_dialog.dismiss();
+                                }
+                            });
+                    builder.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void getUserInfoFromPreferences() {
@@ -97,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             loading_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             loading_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             loading_dialog.setCancelable(false);
-            loading_dialog.setContentView(R.layout.rounded_dialog_loading);
+            loading_dialog.setContentView(R.layout.dialog_loading);
             loading_dialog.show(); // don't forget to dismiss the dialog when done loading
         } else {
             //set login status to false and login again
@@ -221,6 +460,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 SUserType = item.getString("type");
                 SCountry = item.getString("country");
                 SPhone = item.getString("phone");
+                SJoinDate = item.getString("date_joined");
 
                 Glide
                         .with(MainActivity.this)
@@ -249,6 +489,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         editor.putString(Constants.USER_TYPE, SUserType);
         editor.putString(Constants.COUNTRY, SCountry);
         editor.putString(Constants.PHONE, SPhone);
+        editor.putString(Constants.DATE_JOINED, SJoinDate);
         editor.apply();
 
         loading_dialog.dismiss();

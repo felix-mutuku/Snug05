@@ -78,30 +78,6 @@ public class ApiConnector {
         return jsonArray;
     }
 
-    //used to get specific details about the celebration selected
-    public JSONArray GetUserDetails(int DayID) {
-        String url = Constants.BASE_URL_LOGIC + "getCelebrationDetails.php?dayID=" + DayID;
-        HttpEntity httpEntity = null;
-        try {
-            DefaultHttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            httpEntity = httpResponse.getEntity();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JSONArray jsonArray = null;
-        if (httpEntity != null) {
-            try {
-                String entityResponse = EntityUtils.toString(httpEntity);
-                jsonArray = new JSONArray(entityResponse);
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return jsonArray;
-    }
-
     //used to check whether user already exists in database
     String CheckExistingUser(String personID) {
         String url = Constants.BASE_URL_LOGIC + "checkExistingUser.php?personID=" + personID;
@@ -154,7 +130,7 @@ public class ApiConnector {
         return response;
     }
 
-    //used to get specific details about the celebration selected
+    //used to get specific details about the user
     public JSONArray GetUserInformation(String personID) {
         String url = Constants.BASE_URL_LOGIC + "getUserInformation.php?personID=" + personID;
         HttpEntity httpEntity = null;
@@ -176,5 +152,32 @@ public class ApiConnector {
             }
         }
         return jsonArray;
+    }
+
+    //used to register a new user into the database
+    String UpdateUser(String SpersonID, String Sphone) {
+        String url = Constants.BASE_URL_LOGIC + "updateUser.php?personID=" + SpersonID + "&phone=" + Sphone;
+
+        HttpEntity httpEntity = null;
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(url);
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpEntity = httpResponse.getEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String response = null;
+
+        if (httpEntity != null) {
+            try {
+                response = EntityUtils.toString(httpEntity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return response;
     }
 }

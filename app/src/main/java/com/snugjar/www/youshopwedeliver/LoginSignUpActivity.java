@@ -88,7 +88,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 //do something when sign in button clicked
                 //make button disappear and show loading
                 loading.setVisibility(View.VISIBLE);
-                signInButton.setVisibility(View.GONE);
+                signInButton.setVisibility(View.INVISIBLE);
                 //proceed to signing in
                 signIn();
             }
@@ -327,6 +327,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     phone_IMEI != null) {
                 //all automatic entries picked well without errors
                 Sname = Sname.replaceAll(" ", "_");//detecting spaces in the name to avoid HTTP errors
+                //Scountry = Scountry.toUpperCase();//make the country code all caps
                 return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
             }else if (Scountry == null &&
                     phone_IMEI == null){
