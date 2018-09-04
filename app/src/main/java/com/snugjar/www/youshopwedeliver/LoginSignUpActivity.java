@@ -326,6 +326,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     SpersonID != null &&
                     phone_IMEI != null) {
                 //all automatic entries picked well without errors
+                Sname = Sname.replaceAll(" ", "_");//detecting spaces in the name to avoid HTTP errors
                 return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
             }else if (Scountry == null &&
                     phone_IMEI == null){
@@ -355,8 +356,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     TextView toastMessage = toastView.findViewById(android.R.id.message);
                     toastMessage.setTextSize(12);
                     toastMessage.setTextColor(getResources().getColor(R.color.white));
-                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0,
-                            0, 0);
+                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
                     toastMessage.setGravity(Gravity.CENTER);
                     toastMessage.setCompoundDrawablePadding(10);
                     toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
@@ -550,8 +550,8 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             if (personPhone.length() > 0) {
                                 //name not empty
                                 if (personPhone.length() > 11) {
-                                    String SpersonPhone = personPhone.getText().toString();
-                                    if (PhoneNumberUtils.isGlobalPhoneNumber(SpersonPhone)) {
+                                    Sphone = personPhone.getText().toString();
+                                    if (PhoneNumberUtils.isGlobalPhoneNumber(Sphone)) {
                                         //hide UI elements to avoid HTTP collusion
                                         loading_dialog.setVisibility(View.VISIBLE);
                                         confirm_details.setVisibility(View.INVISIBLE);
