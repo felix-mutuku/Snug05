@@ -19,7 +19,7 @@
     <string name="invalid_number">Phone number is invalid !</string>
     <string name="input_country">Your Current Country</string>
     <string name="all_supermarkets_in_one_place">Find all your favorite supermarkets in one place</string>
-    <string name="coming_soon">Coming Soon</string>
+    <string name="coming_soon">Soon</string>
     <string name="slogan">You shop, We deliver</string>
     <string name="what_is_the_ad_about">What is the ad about ?</string>
     <string name="ad_headline">This is the headline for the AD</string>
@@ -30,9 +30,14 @@
     <string name="help">Help</string>
     <string name="feedback">Feedback</string>
     <string name="share_app">Share App</string>
-    <string name="loading">Getting your information...</string>
+    <string name="loading">Please wait…</string>
     <string name="install_google_play_services">Please Install Google Play Services to use this app</string>
-    <string name="from_to_present">From 04-09-2018 to Present</string>
+    <string name="from_to_present">From 04–09–2018 to Present</string>
     <string name="save_details">Save Details</string>
+    <string name="cannot_use_app">Sorry, this App is not yet available for your country.</string>
+    <string name="please_enable_location_services"><b>Shopdrop</b> requires <b>location services</b>.\nPlease <b>enable location services</b> on your device.</string>
+    <string name="enable">Enable Location</string>
+    <string name="home">home</string>
+    <string name="sponsored">Sponsored</string>
 
 </resources>

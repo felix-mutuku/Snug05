@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimaryDark"
-    tools:context=".LoginSignUpActivity">
+    tools:context=".Activities.LoginSignUpActivity">
 
     <ImageView
         android:layout_width="match_parent"
