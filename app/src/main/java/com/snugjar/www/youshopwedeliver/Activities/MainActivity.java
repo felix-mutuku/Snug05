@@ -107,39 +107,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .build();
         } else {
             //ask user to enable location services
-            location_dialog = new Dialog(MainActivity.this);
-            location_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            location_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            location_dialog.setCancelable(false);
-            location_dialog.setContentView(R.layout.location_dialog);
-
-            Button enable_location = location_dialog.findViewById(R.id.enable_location);
-            Button location_retry = location_dialog.findViewById(R.id.location_retry);
-
-            enable_location.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //take user to settings to enable location manually
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
-                }
-            });
-
-            location_retry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //check location services again
-                    if (isLocationServiceEnabled()) {
-                        //location services are available
-                        location_dialog.dismiss();
-                        //restart the app for good measure
-                        Intent intent = new Intent(MainActivity.this, SplashScreenActivity.class);
-                        startActivity(intent);
-                        finish();//close current activity
-                    }
-                }
-            });
-            location_dialog.show();
+            showLocationDialog();
         }
 
 
@@ -490,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         @Override
         protected String doInBackground(ApiConnector... params) {
             //it is executed on Background thread
-            //Scountry = Scountry.toUpperCase();//make the country code all caps
+            //SCountry = SCountry.toUpperCase();//make the country code all caps
             return params[0].UpdateUser(SpersonID, SPhone);
         }
 
@@ -571,7 +539,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onResume() {
         super.onResume();
-
         if (!checkPlayServices()) {
             //show install google services dialog
             play_services_dialog = new Dialog(MainActivity.this);
@@ -663,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             cannot_use_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             cannot_use_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             cannot_use_dialog.setCancelable(false);
-            cannot_use_dialog.setContentView(R.layout.cannot_use_dialog);
+            cannot_use_dialog.setContentView(R.layout.dialog_cannot_use);
             cannot_use_dialog.show(); // don't forget to dismiss the dialog when done loading
 
             //update new country in database for MIS use
@@ -897,5 +864,42 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 e.printStackTrace();
             }
         }
+    }
+
+    private void showLocationDialog() {
+        //ask user to enable location services
+        location_dialog = new Dialog(MainActivity.this);
+        location_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        location_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        location_dialog.setCancelable(false);
+        location_dialog.setContentView(R.layout.dialog_location);
+
+        Button enable_location = location_dialog.findViewById(R.id.enable_location);
+        Button location_retry = location_dialog.findViewById(R.id.location_retry);
+
+        enable_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //take user to settings to enable location manually
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(myIntent);
+            }
+        });
+
+        location_retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //check location services again
+                if (isLocationServiceEnabled()) {
+                    //location services are available
+                    location_dialog.dismiss();
+                    //restart the app for good measure
+                    Intent intent = new Intent(MainActivity.this, SplashScreenActivity.class);
+                    startActivity(intent);
+                    finish();//close current activity
+                }
+            }
+        });
+        location_dialog.show();
     }
 }

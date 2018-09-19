@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:padding="15dp"
+            android:padding="10dp"
             app:srcCompat="@drawable/ic_cancel_black_24dp" />
 
         <TextView

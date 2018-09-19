@@ -330,7 +330,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                     phone_IMEI != null) {
                 //all automatic entries picked well without errors
                 Sname = Sname.replaceAll(" ", "_");//detecting spaces in the name to avoid HTTP errors
-                //Scountry = Scountry.toUpperCase();//make the country code all caps
+                //SCountry = SCountry.toUpperCase();//make the country code all caps
                 return params[0].RegisterUser(Sname, Semail, Sphone, Stype, Scountry, Sphoto, SpersonID, phone_IMEI);
             }else if (Scountry == null &&
                     phone_IMEI == null){

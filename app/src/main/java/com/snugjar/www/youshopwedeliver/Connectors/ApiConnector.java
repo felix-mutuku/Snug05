@@ -403,4 +403,85 @@ public class ApiConnector {
         return response;
 
     }
+
+    //used to get sliding ads from the database
+    public JSONArray GetSupermarketSlidingAds(String country, String supermarketName) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getSupermarketSlidingAds.php?country=" + country + "&supermarket=" + supermarketName);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+    }
+
+    //used to get all the supermarket branches for the supermarket selected byt the user
+    public JSONArray GetAllBranches(String supermarketID) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getAllSupermarketBranches.php?supermarketID=" + supermarketID);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
 }

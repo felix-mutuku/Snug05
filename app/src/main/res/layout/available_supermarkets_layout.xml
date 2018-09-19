@@ -56,16 +56,4 @@
         android:textColor="@color/colorAccent"
         android:textSize="14sp"
         app:fontFamily="@font/gothamrounded" />
-
-    <!--<RatingBar
-        android:id="@+id/supermarket_rating"
-        style="@style/SupermarketRatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/supermarket_name"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:isIndicator="true"
-        android:numStars="5"
-        android:rating="4.0" />-->
 </RelativeLayout>

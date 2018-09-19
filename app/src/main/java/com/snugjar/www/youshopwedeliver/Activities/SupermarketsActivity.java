@@ -6,24 +6,21 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
@@ -37,14 +34,8 @@ import com.snugjar.www.youshopwedeliver.Connectors.Constants;
 import com.snugjar.www.youshopwedeliver.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
-import com.transitionseverywhere.Explode;
-import com.transitionseverywhere.Fade;
-import com.transitionseverywhere.Transition;
-import com.transitionseverywhere.TransitionManager;
-import com.transitionseverywhere.TransitionSet;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -57,16 +48,13 @@ public class SupermarketsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView available;
     TextView back;
-    String Image, availability;
-    String Scountry = "ke";
+    String Scountry;
     ArrayList<String> SlidingImagesList = new ArrayList<String>();
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
     public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
     View rootLayout;
     private int revealX;
     private int revealY;
-    private JSONArray dataArray;
-    private static LayoutInflater inflater = null;
     Dialog loading_dialog;
 
     @Override
@@ -93,7 +81,8 @@ public class SupermarketsActivity extends AppCompatActivity {
 
         if (nInfo != null && nInfo.isConnected()) {
             //when connected to the internet, show available supermarkets and start sliding images
-            new GetSlidingImages().execute(new ApiConnector());
+            getUserInfoFromPreferences();
+            new GetSlidingAds().execute(new ApiConnector());
             loading_dialog.show(); // don't forget to dismiss the dialog when done loading
         } else {
             //user not connected to the internet, don't show ads
@@ -132,12 +121,17 @@ public class SupermarketsActivity extends AppCompatActivity {
         });
     }
 
+    private void getUserInfoFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        Scountry = sharedPreferences.getString(Constants.COUNTRY, "N/A");
+    }
+
     @SuppressLint("StaticFieldLeak")
-    private class GetSlidingImages extends AsyncTask<ApiConnector, Long, JSONArray> {
+    private class GetSlidingAds extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
-            //it is executed on Background thread
-            return params[0].GetSlidingImages(Scountry);
+            String SPlacement = "2";//Ads from Advertisers [1=Home-Page, 2=Supermarkets-Page, 3=Specific-Supermarket]
+            return params[0].GetGeneralSlidingAds(Scountry, SPlacement);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -146,7 +140,7 @@ public class SupermarketsActivity extends AppCompatActivity {
             try {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    SlidingImagesList.add(Constants.BASE_URL_SUPERMARKET_IMAGE + object.getString("image"));
+                    SlidingImagesList.add(Constants.BASE_URL_SUPERMARKET_ADS + object.getString("image"));
                 }
 
                 setFlippingImage();

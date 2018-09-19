@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_rounded">
+
+    <ImageView
+        android:id="@+id/close_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:padding="16dp"
+        app:srcCompat="@drawable/ic_cancel_black_24dp" />
+
+    <ImageView
+        android:id="@+id/dialog_image"
+        android:layout_width="200dp"
+        android:scaleType="fitCenter"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/dialog_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dialog_image"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/gothamrounded"
+        android:padding="10dp"
+        android:text="This supermarket will be soon available"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+</RelativeLayout>

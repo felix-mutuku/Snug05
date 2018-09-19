@@ -39,5 +39,8 @@
     <string name="enable">Enable Location</string>
     <string name="home">home</string>
     <string name="sponsored">Sponsored</string>
+    <string name="soon_available">will soon be available</string>
+    <string name="select_branch">Select branch to shop from</string>
+    <string name="closed">Closed</string>
 
 </resources>
