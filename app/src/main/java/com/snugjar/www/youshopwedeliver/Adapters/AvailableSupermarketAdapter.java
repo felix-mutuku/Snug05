@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +137,7 @@ public class AvailableSupermarketAdapter extends RecyclerView.Adapter<AvailableS
                                                 intent.putExtra("description", json2Object.getString("description"));
                                                 intent.putExtra("rating", json2Object.getString("rating"));
                                                 activity.startActivity(intent);
+
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }

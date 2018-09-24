@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -144,7 +145,9 @@ public class SupermarketsActivity extends AppCompatActivity {
                 }
 
                 setFlippingImage();
+                loading_dialog.dismiss();
                 //get all supermarkets from the server in user's country
+                loading_dialog.show();
                 new GetAvailableSupermarketsTask().execute(new ApiConnector());
 
             } catch (Exception e) {
@@ -204,7 +207,6 @@ public class SupermarketsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
-            loading_dialog.show();
             setSupermarketAdapter(jsonArray);
         }
     }
@@ -257,6 +259,7 @@ public class SupermarketsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //get all supermarkets from the server in user's country
+        loading_dialog.show();
         new GetAvailableSupermarketsTask().execute(new ApiConnector());
     }
 }

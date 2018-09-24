@@ -8,47 +8,29 @@
     android:gravity="center"
     android:padding="7dp">
 
-    <TextView
-        android:id="@+id/supermarket_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:lineSpacingExtra="5dp"
-        android:paddingBottom="3dp"
-        android:paddingEnd="15dp"
-        android:paddingStart="15dp"
-        android:text="@string/app_name"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:fontFamily="@font/gothamrounded" />
-
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/supermarket_name"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/supermarket_availability"
+            android:id="@+id/supermarket_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button4"
+            android:layout_gravity="center"
+            android:layout_weight="5"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:lines="1"
-            android:paddingBottom="7dp"
+            android:lines="3"
+            android:paddingBottom="3dp"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
-            android:paddingTop="7dp"
-            android:text="@string/closed"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="14sp"
             app:fontFamily="@font/gothamrounded" />
 
         <LinearLayout
@@ -56,24 +38,38 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-            android:layout_weight="1.5"
-            android:background="@drawable/bg_button5"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button3"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingBottom="7dp"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:paddingTop="7dp">
+            android:paddingBottom="5dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/supermarket_availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                android:gravity="center"
+                android:text="@string/closed"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="12sp"
+                app:fontFamily="@font/gothamrounded" />
 
             <TextView
                 android:id="@+id/supermarket_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:fontFamily="@font/gothamrounded"
                 android:gravity="center"
                 android:text="Distance: 30KMS"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_gray"
                 android:textSize="14sp" />
 
             <TextView
@@ -81,10 +77,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:fontFamily="@font/gothamrounded"
                 android:gravity="center"
                 android:text="Delivery: 200KSH"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_gray"
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>

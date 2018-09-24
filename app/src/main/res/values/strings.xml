@@ -42,5 +42,9 @@
     <string name="soon_available">will soon be available</string>
     <string name="select_branch">Select branch to shop from</string>
     <string name="closed">Closed</string>
+    <string name="getting_branches">Loading Branches…</string>
+    <string name="open">Open</string>
+    <string name="current_location">Is this close to your current location ?</string>
+    <string name="confirm_location">Confirm Location</string>
 
 </resources>

@@ -1,9 +1,11 @@
 package com.snugjar.www.youshopwedeliver.Connectors;
 
 import android.net.Uri;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -100,6 +102,8 @@ public class ApiConnector {
                 urlConnection.disconnect();
             }
         }
+
+        Log.e("TAG >>>>>>>>>>>>>>>>>>>", String.valueOf(jsonArray));
 
         return jsonArray;
 
@@ -444,7 +448,7 @@ public class ApiConnector {
         return jsonArray;
     }
 
-    //used to get all the supermarket branches for the supermarket selected byt the user
+    //used to get all the supermarket branches for the supermarket selected by the user
     public JSONArray GetAllBranches(String supermarketID) {
         StringBuilder result = new StringBuilder();
         JSONArray jsonArray = null;
@@ -452,6 +456,142 @@ public class ApiConnector {
 
         try {
             URL url = new URL(Constants.BASE_URL_LOGIC + "getAllSupermarketBranches.php?supermarketID=" + supermarketID);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
+
+    //used to get all the supermarket branches distance for the user's current location
+    public String[] GetBranchDistance(String Olatitude, String Olongitude, String Dlatitude, String Dlongitude) {
+        StringBuilder result = new StringBuilder();
+        String SDistance = null,
+                SDuration = null;
+        JSONObject jsonObject = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.DISTANCE_MATRIX_API + Olatitude + "," + Olongitude +
+                    Constants.DISTANCE_MATRIX_API2 + Dlatitude + "," + Dlongitude + Constants.DISTANCE_MATRIX_API3);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonObject = new JSONObject(String.valueOf(result));
+
+                SDistance = jsonObject.getJSONArray("rows")
+                        .getJSONObject(0)
+                        .getJSONArray("elements")
+                        .getJSONObject(0)
+                        .getJSONObject("distance")
+                        .getString("text");
+
+                SDuration = jsonObject.getJSONArray("rows")
+                        .getJSONObject(0)
+                        .getJSONArray("elements")
+                        .getJSONObject(0)
+                        .getJSONObject("duration_in_traffic")
+                        .getString("text");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        //return SDistance;
+
+        return new String[] {SDistance, SDuration};
+
+    }
+
+    //used to check whether mobile number already exists in database before adding it
+    public String CheckTimeFromServer() {
+        StringBuilder result = new StringBuilder();
+        HttpsURLConnection urlConnection = null;
+        String response = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "checkTimeFromServer.php");
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            response = String.valueOf(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return response;
+
+    }
+
+    //used to get all the supermarket branches for the supermarket selected by the user
+    public JSONArray GetProducts(String country) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getProducts.php?country=" + country);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());

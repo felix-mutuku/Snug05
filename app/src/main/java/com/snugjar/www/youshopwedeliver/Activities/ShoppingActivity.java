@@ -24,14 +24,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
@@ -40,6 +44,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.snugjar.www.youshopwedeliver.Adapters.ProductsAdapter;
 import com.snugjar.www.youshopwedeliver.Connectors.ApiConnector;
 import com.snugjar.www.youshopwedeliver.Connectors.Constants;
 import com.snugjar.www.youshopwedeliver.R;
@@ -54,15 +59,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class ShoppingActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     ConnectivityManager cManager;
     NetworkInfo nInfo;
-    TextView back, supermarket_slogan, fav_txt;
-    Dialog loading_dialog, description_dialog, branches_dialog, location_dialog, play_services_dialog;
-    String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription, SSupermarketRating, SCountry, SLocation;
-    ImageView supermarket_logo, supermarket_info;
+    TextView back, supermarket_slogan, branch_text;
+    Dialog loading_dialog, description_dialog, branches_dialog, location_dialog, play_services_dialog, confirm_location_dialog;
+    String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription,
+            SSupermarketRating, SCountry, SLocation, OLatitude, OLongitude, SServerTime, SBranchSelected;
+    ImageView supermarket_logo, supermarket_info, available;
     RatingBar supermarket_rating;
     ArrayList<String> SlidingImagesList = new ArrayList<String>();
     CarouselView carouselView;
@@ -72,6 +79,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     private long UPDATE_INTERVAL = 30000;//30 seconds
     private long FASTEST_INTERVAL = 15000;//15 seconds
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    RecyclerView recycler_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +92,9 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         supermarket_info = findViewById(R.id.supermarket_info);
         supermarket_rating = findViewById(R.id.supermarket_rating);
         carouselView = findViewById(R.id.sliding_images);
-        fav_txt = findViewById(R.id.fav_txt);
+        branch_text = findViewById(R.id.branch_text);
+        available = findViewById(R.id.available);
+        recycler_view = findViewById(R.id.recycler_view);
 
         cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         assert cManager != null;
@@ -107,6 +117,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
+            mGoogleApiClient.connect();
         } else {
             //prompt user to turn on location services
             showLocationDialog();
@@ -130,7 +141,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             loading_dialog = new Dialog(ShoppingActivity.this);
             loading_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             loading_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            //loading_dialog.setCancelable(false);
+            loading_dialog.setCancelable(false);
             loading_dialog.setContentView(R.layout.dialog_loading);
             loading_dialog.show();
 
@@ -206,6 +217,43 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         new GetSlidingAds().execute(new ApiConnector());
     }
 
+    private void displayConfirmLocationDialog() {
+        //ask user to confirm the auto selected location
+        //show dialog
+        confirm_location_dialog = new Dialog(ShoppingActivity.this);
+        confirm_location_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        confirm_location_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        confirm_location_dialog.setCancelable(false);
+        confirm_location_dialog.setContentView(R.layout.dialog_user_location);
+
+        TextView user_location = confirm_location_dialog.findViewById(R.id.user_location);
+        Button retry_location = confirm_location_dialog.findViewById(R.id.retry_location);
+        Button confirm_location = confirm_location_dialog.findViewById(R.id.confirm_location);
+
+        //show user current location
+        user_location.setText(SLocation);
+
+        retry_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //retry looking for location
+                mGoogleApiClient.connect();
+                confirm_location_dialog.dismiss();
+                confirm_location_dialog.show();
+            }
+        });
+
+        confirm_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirm_location_dialog.dismiss();//close current dialog
+                displayBranchDialog();//when user confirms location
+            }
+        });
+
+        confirm_location_dialog.show();
+    }
+
     private void displayBranchDialog() {
         //get the distance of all available branches and prompt user to select a branch
         //show dialog
@@ -215,44 +263,48 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         branches_dialog.setCancelable(false);
         branches_dialog.setContentView(R.layout.dialog_branches);
 
-        TextView select_branch_text = branches_dialog.findViewById(R.id.select_branch_text);
-        TextView user_location = branches_dialog.findViewById(R.id.user_location);
         RecyclerView branch_recycler_view = branches_dialog.findViewById(R.id.branch_recycler_view);
+        RelativeLayout relative_loading = branches_dialog.findViewById(R.id.relative_loading);
+        LinearLayout linear1 = branches_dialog.findViewById(R.id.linear1);
+        ImageView close_dialog = branches_dialog.findViewById(R.id.close_dialog);
 
-        //show user current location
-        user_location.setText(SLocation);
+        linear1.setVisibility(View.GONE);//hide recommended shop first
 
-        new GetAllSupermarketBranches(branch_recycler_view).execute(new ApiConnector());
+        relative_loading.setVisibility(View.VISIBLE);
+        new GetAllSupermarketBranches(branch_recycler_view, relative_loading).execute(new ApiConnector());
+
+        close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //close dialog and close activity
+                branches_dialog.dismiss();
+                finish();
+            }
+        });
 
         branches_dialog.show();
     }
 
-    public void setBranchesAdapter(JSONArray jsonArray, RecyclerView branch_r_view) {
+    public void setBranchesAdapter(JSONArray jsonArray, RecyclerView branch_r_view, RelativeLayout relative_loading) {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL);
         branch_r_view.setLayoutManager(staggeredGridLayoutManager);
         try {
-            jsonArray = jsonArray;
             branch_r_view.setAdapter(new AllBranchesAdapter(jsonArray));
-            if (jsonArray == null) {
-                //available.setVisibility(View.VISIBLE);
-                //loading_dialog.dismiss();
-                //swipe_refresh_layout.setVisibility(View.VISIBLE);
-            } else {
-                //available.setVisibility(View.GONE);
-            }
-            //loading_dialog.dismiss();
-            //swipe_refresh_layout.setRefreshing(false);
+            relative_loading.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     @SuppressLint("StaticFieldLeak")
     private class GetAllSupermarketBranches extends AsyncTask<ApiConnector, Long, JSONArray> {
         RecyclerView branch_r_view;
+        RelativeLayout relative_loading;
 
-        public GetAllSupermarketBranches(RecyclerView branch_recycler_view) {
+        GetAllSupermarketBranches(RecyclerView branch_recycler_view, RelativeLayout r_loading) {
             branch_r_view = branch_recycler_view;
+            relative_loading = r_loading;
         }
 
         @Override
@@ -267,8 +319,8 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
-            loading_dialog.show();
-            setBranchesAdapter(jsonArray, branch_r_view);
+            relative_loading.setVisibility(View.VISIBLE);
+            setBranchesAdapter(jsonArray, branch_r_view, relative_loading);
         }
     }
 
@@ -279,6 +331,9 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
         if (mLocation != null) {
             try {
+                OLatitude = String.valueOf(mLocation.getLatitude());
+                OLongitude = String.valueOf(mLocation.getLongitude());
+
                 getAddress(ShoppingActivity.this, mLocation.getLatitude(), mLocation.getLongitude());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -323,6 +378,9 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         //when user presses home or a phone call comes in
         super.onUserLeaveHint();
         stopLocationUpdates();
+        branches_dialog.dismiss();
+        loading_dialog.dismiss();
+        confirm_location_dialog.dismiss();
     }
 
     public void stopLocationUpdates() {
@@ -370,10 +428,35 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
                 SLocation = address;
 
-                displayBranchDialog();
+                new CheckTimeFromServer().execute(new ApiConnector());
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    class CheckTimeFromServer extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].CheckTimeFromServer();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            if (!response.equals("error")) {
+                //returned time successfully
+                SServerTime = response.replaceAll(":", "");
+                loading_dialog.dismiss();
+                //when finished checking time
+                displayConfirmLocationDialog();
+            } else {
+                //time was not returned
+                //try getting time again from the server
+                new CheckTimeFromServer().execute(new ApiConnector());
+            }
         }
     }
 
@@ -523,44 +606,56 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
     private class AllBranchesAdapter extends RecyclerView.Adapter<AllBranchesAdapter.MyViewHolder> {
         private JSONArray dataArray;
-        String Image, availability, Sname;
         private LayoutInflater inflater = null;
 
-        public AllBranchesAdapter(JSONArray jsonArray) {
+        AllBranchesAdapter(JSONArray jsonArray) {
             try {
-                this.dataArray = jsonArray;
+                dataArray = jsonArray;
                 inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.supermarket_branches_layout, parent, false);
-            MyViewHolder vh = new MyViewHolder(v);
-            return vh;
+            return new MyViewHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
             try {
                 JSONObject jsonObject = this.dataArray.getJSONObject(position);
 
-                holder.supermarket_name.setText(String.format("%s %s", jsonObject.getString("supermarket"),
-                        jsonObject.getString("supermarket_branch")));
+                String latitude = jsonObject.getString("latitude");
+                String longitude = jsonObject.getString("longitude");
+                final String branchSelected = String.format("%s %s", jsonObject.getString("supermarket"),
+                        jsonObject.getString("supermarket_branch"));
+                String openingTime = jsonObject.getString("opening_time");
+                String closingTime = jsonObject.getString("closing_time");
+                openingTime = openingTime.replaceAll(":", "");
+                closingTime = closingTime.replaceAll(":", "");
 
+                holder.supermarket_name.setText(branchSelected);
 
-                //holder.supermarket_rating.setRating(Float.parseFloat(jsonObject.getString("rating")));
-                //availability = jsonObject.getString("active");
+                String[] combined = new GetBranchDistance(latitude, longitude).execute(new ApiConnector()).get();
+                String distance = combined[0];
+                String duration = combined[1];
 
-                /*if (availability.equals("false")) {
-                    holder.supermarket_availability.setText(R.string.coming_soon);
-                    holder.supermarket_availability.setTextColor(getResources().getColor(R.color.colorPrimary));
+                holder.supermarket_distance.setText(String.format("%s %s", distance, duration));
+
+                if (Integer.valueOf(openingTime) > Integer.valueOf(SServerTime) ||
+                        Integer.valueOf(closingTime) < Integer.valueOf(SServerTime)) {
+                    //show that the supermarket is closed
+                    holder.supermarket_availability.setText(R.string.closed);
+                    holder.supermarket_availability.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 } else {
-                    holder.supermarket_availability.setText("");
-                    //holder.supermarket_availability.setBackgroundColor(00000000);
-                }*/
+                    //show that supermarket is open
+                    holder.supermarket_availability.setText(R.string.open);
+                    holder.supermarket_availability.setTextColor(getResources().getColor(R.color.dark_gray));
+                }
 
                 //implement setOnClickListener event on item view.
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -570,24 +665,31 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
                         try {
                             json2Object = dataArray.getJSONObject(position);
-                            final String active = json2Object.getString("active");
+                            String available = holder.supermarket_availability.getText().toString();
 
-                            if (active.equals("true")) {
+                            if (available.equals("Open")) {
                                 //open supermarket clicked by the user
-                                /*Intent intent = new Intent(ShoppingActivity.this, ShoppingActivity.class);
-                                intent.putExtra("id", json2Object.getString("id"));
-                                intent.putExtra("name", json2Object.getString("name"));
-                                intent.putExtra("image", json2Object.getString("image"));
-                                intent.putExtra("slogan", json2Object.getString("slogan"));
-                                intent.putExtra("description", json2Object.getString("description"));
-                                intent.putExtra("rating", json2Object.getString("rating"));
-                                activity.startActivity(intent);*/
-
+                                SBranchSelected = branchSelected;
+                                //branch has been selected
+                                branch_text.setText(String.format("Shopping from %s", SBranchSelected));
+                                branches_dialog.dismiss();
+                                loading_dialog.show();
+                                new GetProducts().execute(new ApiConnector());
                             } else {
-                                //show dialog of coming soon
-                                Image = json2Object.getString("image");
-                                Sname = json2Object.getString("name");
-                                //showComingSoonDialog(Image, Sname);
+                                //show toast that supermarket is closed
+                                Toast toast = Toast.makeText(ShoppingActivity.this, "This branch is closed!!" +
+                                                "\nPlease try again when it opens.",
+                                        Toast.LENGTH_SHORT);
+                                View toastView = toast.getView(); //This'll return the default View of
+                                //the Toast.
+                                TextView toastMessage = toastView.findViewById(android.R.id.message);
+                                toastMessage.setTextSize(12);
+                                toastMessage.setTextColor(getResources().getColor(R.color.white));
+                                toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                                toastMessage.setGravity(Gravity.CENTER);
+                                toastMessage.setCompoundDrawablePadding(10);
+                                toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                                toast.show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -596,6 +698,10 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                 });
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -608,7 +714,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         @Override
         public int getItemCount() {
             try {
-                return this.dataArray.length();
+                return dataArray.length();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -621,7 +727,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             TextView supermarket_distance;
             TextView delivery_cost;
 
-            public MyViewHolder(View itemView) {
+            MyViewHolder(View itemView) {
                 super(itemView);
                 supermarket_name = itemView.findViewById(R.id.supermarket_name);
                 supermarket_availability = itemView.findViewById(R.id.supermarket_availability);
@@ -630,4 +736,65 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             }
         }
     }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetBranchDistance extends AsyncTask<ApiConnector, Long, String[]> {
+        String DLatitude, DLongitude;
+
+        GetBranchDistance(String latitude, String longitude) {
+            DLatitude = latitude;
+            DLongitude = longitude;
+        }
+
+        @Override
+        protected String[] doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].GetBranchDistance(OLatitude, OLongitude, DLatitude, DLongitude);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onPostExecute(String[] args) {
+            //pass arguments to display on branches
+        }
+    }
+
+    public void setProductsAdapter(JSONArray jsonArray) {
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.HORIZONTAL);
+        recycler_view.setLayoutManager(staggeredGridLayoutManager);
+        try {
+            jsonArray = jsonArray;
+            recycler_view.setAdapter(new ProductsAdapter(jsonArray, this, recycler_view));
+            if (jsonArray == null) {
+                available.setVisibility(View.VISIBLE);
+                loading_dialog.dismiss();
+                //swipe_refresh_layout.setVisibility(View.VISIBLE);
+            } else {
+                available.setVisibility(View.GONE);
+            }
+            loading_dialog.dismiss();
+            //swipe_refresh_layout.setRefreshing(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
+        @Override
+        protected JSONArray doInBackground(ApiConnector... params) {
+            try {
+                return params[0].GetProducts(SCountry);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            setProductsAdapter(jsonArray);
+        }
+    }
+
 }

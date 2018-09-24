@@ -142,9 +142,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@drawable/bg_button6"
                     android:isIndicator="true"
                     android:numStars="5"
-                    android:rating="3.5" />
+                    android:rating="2" />
             </LinearLayout>
 
             <TextView
@@ -166,25 +167,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
             tools:context=".Activities.SupermarketsActivity">
 
             <TextView
-                android:id="@+id/fav_txt"
+                android:id="@+id/branch_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:fontFamily="@font/gothamrounded"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="5dp"
-                android:text="@string/all_supermarkets_in_one_place"
+                android:text="@string/app_name"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -192,9 +194,131 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/fav_txt"
+                android:layout_below="@+id/branch_text"
                 android:layout_centerInParent="true"
                 android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recycler_view"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Office Supplies"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Fresh Food"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view2"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Frozen"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view3"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Food Cupboard"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recycler_view"
+                android:layout_margin="10dp"
+                android:layout_toEndOf="@+id/text_view"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Canned Goods"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view"
+                android:layout_margin="10dp"
+                android:layout_toEndOf="@+id/text_view2"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Cooking Oil"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Sauces"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_view8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view4"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_button3"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="Drinks"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp" />
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

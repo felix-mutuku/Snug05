@@ -7,6 +7,10 @@ public class Constants {
     public static final String BASE_URL_SUPERMARKET_LOGOS = "https://www.snugjar.com/Apps/Shopdrop/SupermarketLogos/";
     public static final String BASE_URL_SUPERMARKET_ADS = "https://www.snugjar.com/Apps/Shopdrop/SupermarketAds/";
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.snugjar.www.youshopwedeliver";
+    public static final String GOOGLE_MAPS_API_KEY = "AIzaSyCCZpukF_GBg6rmdow7IUlYSBQcpER0v4E";
+    public static final String DISTANCE_MATRIX_API = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
+    public static final String DISTANCE_MATRIX_API2 = "&destinations=";
+    public static final String DISTANCE_MATRIX_API3 = "&mode=driving&departure_time=now&key=" + GOOGLE_MAPS_API_KEY;
 
     //public static final String SHARED_PREF_LOGIN = "isLoggedIn";
     //public static final boolean LOGIN = false;
