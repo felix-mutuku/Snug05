@@ -46,5 +46,12 @@
     <string name="open">Open</string>
     <string name="current_location">Is this close to your current location ?</string>
     <string name="confirm_location">Confirm Location</string>
+    <string name="select_this_branch">Select Branch</string>
+    <string name="branches">branches</string>
+    <string name="distance">Distance :</string>
+    <string name="duration">Delivery duration :</string>
+    <string name="delivery_cost">Delivery cost :</string>
+    <string name="kenya_shillings">KES</string>
+    <string name="essentials">Essentials</string>
 
 </resources>

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
     android:background="@color/white"
     android:gravity="center"
     android:padding="7dp">
@@ -23,7 +22,9 @@
             android:layout_gravity="center"
             android:layout_weight="5"
             android:gravity="center"
+            android:drawablePadding="5dp"
             android:lineSpacingExtra="5dp"
+            android:drawableStart="@drawable/ic_store_black_24dp"
             android:lines="3"
             android:paddingBottom="3dp"
             android:paddingEnd="15dp"
@@ -33,7 +34,8 @@
             android:textSize="14sp"
             app:fontFamily="@font/gothamrounded" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/supermarket_availability"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -41,49 +43,12 @@
             android:layout_weight="1"
             android:background="@drawable/bg_button3"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="5dp">
+            android:text="@string/closed"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/gothamrounded" />
 
-            <TextView
-                android:id="@+id/supermarket_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:gravity="center"
-                android:text="@string/closed"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="12sp"
-                app:fontFamily="@font/gothamrounded" />
-
-            <TextView
-                android:id="@+id/supermarket_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:fontFamily="@font/gothamrounded"
-                android:gravity="center"
-                android:text="Distance: 30KMS"
-                android:textColor="@color/dark_gray"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/delivery_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:fontFamily="@font/gothamrounded"
-                android:gravity="center"
-                android:text="Delivery: 200KSH"
-                android:textColor="@color/dark_gray"
-                android:textSize="14sp" />
-        </LinearLayout>
     </LinearLayout>
 
     <View

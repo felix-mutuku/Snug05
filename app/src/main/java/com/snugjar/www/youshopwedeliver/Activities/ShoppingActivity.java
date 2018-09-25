@@ -66,9 +66,10 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     ConnectivityManager cManager;
     NetworkInfo nInfo;
     TextView back, supermarket_slogan, branch_text;
-    Dialog loading_dialog, description_dialog, branches_dialog, location_dialog, play_services_dialog, confirm_location_dialog;
+    Dialog loading_dialog, description_dialog, branches_dialog, location_dialog, play_services_dialog, confirm_location_dialog,
+            selected_branch_dialog;
     String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription,
-            SSupermarketRating, SCountry, SLocation, OLatitude, OLongitude, SServerTime, SBranchSelected;
+            SSupermarketRating, SCountry, SLocation, OLatitude, OLongitude, SServerTime, SBranchSelected, BLatitude, BLongitude;
     ImageView supermarket_logo, supermarket_info, available;
     RatingBar supermarket_rating;
     ArrayList<String> SlidingImagesList = new ArrayList<String>();
@@ -265,10 +266,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
         RecyclerView branch_recycler_view = branches_dialog.findViewById(R.id.branch_recycler_view);
         RelativeLayout relative_loading = branches_dialog.findViewById(R.id.relative_loading);
-        LinearLayout linear1 = branches_dialog.findViewById(R.id.linear1);
         ImageView close_dialog = branches_dialog.findViewById(R.id.close_dialog);
-
-        linear1.setVisibility(View.GONE);//hide recommended shop first
 
         relative_loading.setVisibility(View.VISIBLE);
         new GetAllSupermarketBranches(branch_recycler_view, relative_loading).execute(new ApiConnector());
@@ -290,6 +288,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         branch_r_view.setLayoutManager(staggeredGridLayoutManager);
         try {
             branch_r_view.setAdapter(new AllBranchesAdapter(jsonArray));
+            branch_r_view.smoothScrollToPosition(0);
             relative_loading.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -629,22 +628,14 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             try {
                 JSONObject jsonObject = this.dataArray.getJSONObject(position);
 
-                String latitude = jsonObject.getString("latitude");
-                String longitude = jsonObject.getString("longitude");
-                final String branchSelected = String.format("%s %s", jsonObject.getString("supermarket"),
+                String branch = String.format("%s %s", jsonObject.getString("supermarket"),
                         jsonObject.getString("supermarket_branch"));
                 String openingTime = jsonObject.getString("opening_time");
                 String closingTime = jsonObject.getString("closing_time");
                 openingTime = openingTime.replaceAll(":", "");
                 closingTime = closingTime.replaceAll(":", "");
 
-                holder.supermarket_name.setText(branchSelected);
-
-                String[] combined = new GetBranchDistance(latitude, longitude).execute(new ApiConnector()).get();
-                String distance = combined[0];
-                String duration = combined[1];
-
-                holder.supermarket_distance.setText(String.format("%s %s", distance, duration));
+                holder.supermarket_name.setText(branch);
 
                 if (Integer.valueOf(openingTime) > Integer.valueOf(SServerTime) ||
                         Integer.valueOf(closingTime) < Integer.valueOf(SServerTime)) {
@@ -666,15 +657,16 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                         try {
                             json2Object = dataArray.getJSONObject(position);
                             String available = holder.supermarket_availability.getText().toString();
+                            BLatitude = json2Object.getString("latitude");
+                            BLongitude = json2Object.getString("longitude");
+                            SBranchSelected = String.format("%s %s", json2Object.getString("supermarket"),
+                                    json2Object.getString("supermarket_branch"));
 
                             if (available.equals("Open")) {
                                 //open supermarket clicked by the user
-                                SBranchSelected = branchSelected;
-                                //branch has been selected
-                                branch_text.setText(String.format("Shopping from %s", SBranchSelected));
-                                branches_dialog.dismiss();
                                 loading_dialog.show();
-                                new GetProducts().execute(new ApiConnector());
+                                branches_dialog.dismiss();
+                                showSelectedBranchDialog();
                             } else {
                                 //show toast that supermarket is closed
                                 Toast toast = Toast.makeText(ShoppingActivity.this, "This branch is closed!!" +
@@ -699,10 +691,6 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
             } catch (JSONException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
             }
         }
 
@@ -724,16 +712,86 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         public class MyViewHolder extends RecyclerView.ViewHolder {
             TextView supermarket_name;
             TextView supermarket_availability;
-            TextView supermarket_distance;
-            TextView delivery_cost;
 
             MyViewHolder(View itemView) {
                 super(itemView);
                 supermarket_name = itemView.findViewById(R.id.supermarket_name);
                 supermarket_availability = itemView.findViewById(R.id.supermarket_availability);
-                supermarket_distance = itemView.findViewById(R.id.supermarket_distance);
-                delivery_cost = itemView.findViewById(R.id.delivery_cost);
             }
+        }
+    }
+
+    private void showSelectedBranchDialog() {
+        try {
+            selected_branch_dialog = new Dialog(ShoppingActivity.this);
+            selected_branch_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            selected_branch_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            selected_branch_dialog.setCancelable(false);
+            selected_branch_dialog.setContentView(R.layout.dialog_selected_branch);
+
+            TextView back = selected_branch_dialog.findViewById(R.id.back);
+            TextView dialog_branch_name = selected_branch_dialog.findViewById(R.id.dialog_branch_name);
+            TextView dialog_branch_distance = selected_branch_dialog.findViewById(R.id.dialog_branch_distance);
+            TextView dialog_delivery_duration = selected_branch_dialog.findViewById(R.id.dialog_delivery_duration);
+            TextView dialog_delivery_cost = selected_branch_dialog.findViewById(R.id.dialog_delivery_cost);
+            Button confirm_branch = selected_branch_dialog.findViewById(R.id.confirm_branch);
+
+            //show user the branch, distance and time it will take to deliver the items by road
+            String[] combined = new GetBranchDistance(BLatitude, BLongitude).execute(new ApiConnector()).get();
+            String distance = combined[0];
+            String duration = combined[1];
+
+            dialog_branch_distance.setText(String.format("%s %s", getString(R.string.distance), distance));
+
+            //split integer from string
+            String[] part = distance.split("(?<=\\d)( )(?=[a-zA-Z])");
+            distance = part[0];
+
+            dialog_branch_name.setText(SBranchSelected);
+            dialog_delivery_duration.setText(String.format("%s %s", getString(R.string.duration), duration));
+
+            double double_distance = Double.parseDouble(distance);
+
+            if (double_distance > 10) {
+                //user has passed the threshold KMs of 10KMs
+                //charge 20KES per KM after the 10KMs
+                double_distance = double_distance * 20;//get price of distance over threshold
+                Long L = Math.round(double_distance);
+                int i = L.intValue();
+
+                dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
+                        i, getString(R.string.kenya_shillings)));
+            } else {
+                dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
+                        200, getString(R.string.kenya_shillings)));
+            }
+
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //back pressed, go to previous branches dialog
+                    selected_branch_dialog.dismiss();
+                    branches_dialog.show();
+                }
+            });
+
+            confirm_branch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //when user has confirmed the branch they want to shop in
+                    selected_branch_dialog.dismiss();
+                    loading_dialog.show();
+                    branch_text.setText(String.format("Shopping from %s", SBranchSelected));//show user branch they are shopping from
+                    new GetProducts().execute(new ApiConnector());
+                }
+            });
+
+            selected_branch_dialog.show();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 

@@ -103,8 +103,6 @@ public class ApiConnector {
             }
         }
 
-        Log.e("TAG >>>>>>>>>>>>>>>>>>>", String.valueOf(jsonArray));
-
         return jsonArray;
 
     }

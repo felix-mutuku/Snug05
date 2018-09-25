@@ -34,107 +34,11 @@
         android:paddingStart="10dp"
         app:srcCompat="@drawable/ic_cancel_black_24dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_below="@id/select_branch_text"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="7dp"
-        android:background="@color/gray" />
-
-    <LinearLayout
-        android:id="@+id/linear1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/select_branch_text"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/dialog_supermarket_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:lineSpacingExtra="5dp"
-            android:lines="3"
-            android:paddingBottom="3dp"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:fontFamily="@font/gothamrounded" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button4"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="5dp">
-
-            <TextView
-                android:id="@+id/dialog_supermarket_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:gravity="center"
-                android:text="@string/closed"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:fontFamily="@font/gothamrounded" />
-
-            <TextView
-                android:id="@+id/dialog_supermarket_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:fontFamily="@font/gothamrounded"
-                android:gravity="center"
-                android:text="Distance: 30KMS"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/dialog_delivery_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:fontFamily="@font/gothamrounded"
-                android:gravity="center"
-                android:text="Delivery: 200KSH"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="0.7dp"
-        android:layout_below="@id/linear1"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="7dp"
-        android:background="@color/gray" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/branch_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view1"
+        android:layout_below="@id/close_dialog"
         android:layout_centerInParent="true"
         android:scrollbars="none" />
 
@@ -143,7 +47,7 @@
         android:id="@+id/relative_loading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view1"
+        android:layout_below="@id/close_dialog"
         android:layout_centerInParent="true"
         android:padding="5dp">
 
