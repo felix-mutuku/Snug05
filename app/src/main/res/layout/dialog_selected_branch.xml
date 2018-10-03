@@ -93,6 +93,18 @@
                 android:text="Delivery cost: 200 KES"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/dialog_essentials_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/gothamrounded"
+                android:gravity="center"
+                android:text="Essentials Delivery cost: 200 KES"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 

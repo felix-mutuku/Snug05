@@ -47,7 +47,9 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.ShoppingActivity"></activity>
+        <activity android:name=".Activities.ShoppingActivity" />
+        <activity android:name=".Activities.SearchActivity" />
+        <activity android:name=".Activities.CategoriesActivity"></activity>
     </application>
 
 </manifest>

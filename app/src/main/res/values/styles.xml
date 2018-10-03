@@ -29,4 +29,9 @@
         <item name="colorControlNormal">@color/gray</item>
         <item name="colorControlActivated">@color/white</item>
     </style>
+
+    <style name="MyCustomTabAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/gothamrounded</item>
+    </style>
 </resources>

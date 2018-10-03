@@ -12,9 +12,7 @@ public class Constants {
     public static final String DISTANCE_MATRIX_API2 = "&destinations=";
     public static final String DISTANCE_MATRIX_API3 = "&mode=driving&departure_time=now&key=" + GOOGLE_MAPS_API_KEY;
 
-    //public static final String SHARED_PREF_LOGIN = "isLoggedIn";
-    //public static final boolean LOGIN = false;
-
+    //saving a user's personal data in shared preferences
     public static final String SHARED_PREF_NAME = "Shopdrop_pref";
     public static final String PERSON_ID = "shopdrop_personID";
     public static final String PROFILE_PHOTO = "shopdrop_user_photo";
@@ -25,4 +23,14 @@ public class Constants {
     public static final String COUNTRY = "shopdrop_country";
     public static final String PHONE = "shopdrop_user_phone";
     public static final String DATE_JOINED = "shopdrop_user_date_joined";
+
+    //saving user's supermarket preference in shared preferences
+
+    public static final String SUPERMARKET_NAME = "shopdrop_supermarket_name";
+    public static final String SUPERMARKET_BRANCH = "shopdrop_supermarket_branch";
+    public static final String DELIVERY_LATITUDE = "shopdrop_delivery_latitude";
+    public static final String DELIVERY_LONGITUDE = "shopdrop_delivery_longitude";
+    public static final String DELIVERY_DURATION = "shopdrop_delivery_duration";
+    public static final String DELIVERY_COST = "shopdrop_delivery_cost";
+    public static final String ESSENTIALS_DELIVERY_COST = "shopdrop_delivery_essentials_cost";
 }

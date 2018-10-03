@@ -518,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             loading_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             loading_dialog.setCancelable(false);
             loading_dialog.setContentView(R.layout.dialog_loading);
-            loading_dialog.show(); // don't forget to dismiss the dialog when done loading
+            loading_dialog.show(); //don't forget to dismiss the dialog when done loading
         } else {
             //set login status to false and login again
             SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());

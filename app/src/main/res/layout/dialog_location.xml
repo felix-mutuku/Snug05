@@ -23,7 +23,7 @@
         android:gravity="center"
         android:lineSpacingExtra="10dp"
         android:text="@string/please_enable_location_services"
-        android:textColor="@color/gray"
+        android:textColor="@color/medium_gray"
         android:textSize="16sp"
         app:fontFamily="@font/gothamrounded" />
 
@@ -42,11 +42,11 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_button3"
+            android:background="@drawable/bg_button7"
             android:fontFamily="@font/gothamrounded"
             android:text="@string/retry"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
         <Button

@@ -541,9 +541,7 @@ public class ApiConnector {
             }
         }
 
-        //return SDistance;
-
-        return new String[] {SDistance, SDuration};
+        return new String[]{SDistance, SDuration};
 
     }
 
@@ -583,13 +581,136 @@ public class ApiConnector {
     }
 
     //used to get all the supermarket branches for the supermarket selected by the user
-    public JSONArray GetProducts(String country) {
+    public JSONArray GetEssentialProducts(String country) {
         StringBuilder result = new StringBuilder();
         JSONArray jsonArray = null;
         HttpsURLConnection urlConnection = null;
 
         try {
-            URL url = new URL(Constants.BASE_URL_LOGIC + "getProducts.php?country=" + country);
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getEssentialProducts.php?country=" + country);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
+
+    //used to get all the supermarket branches for the supermarket selected by the user
+    public JSONArray GetSearchItems(String searchText, String country) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getSearchItems.php?searchText=" + searchText + "&country=" + country);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
+
+    //used to get all the supermarket branches for the supermarket selected by the user
+    public JSONArray GetCategoryProducts(String country, String category) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getCategoryProducts.php?country=" + country + "&category=" + category);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
+
+    //used to get all the supermarket branches for the supermarket selected by the user
+    public JSONArray GetSubCategoryProducts(String country, String category, String subcategory) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getSubCategoryProducts.php?country=" + country+ "&category=" + category+ "&subcategory=" + subcategory);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());

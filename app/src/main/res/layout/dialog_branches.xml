@@ -70,7 +70,7 @@
             android:gravity="center"
             android:padding="3dp"
             android:text="@string/getting_branches"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/medium_gray"
             android:textSize="14sp"
             app:fontFamily="@font/gothamrounded" />
     </RelativeLayout>

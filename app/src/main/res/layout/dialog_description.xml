@@ -9,8 +9,8 @@
         android:id="@+id/close_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
         android:padding="10dp"
         app:srcCompat="@drawable/ic_cancel_black_24dp" />
 
@@ -23,10 +23,23 @@
         android:scaleType="fitCenter"
         android:src="@drawable/logo" />
 
+    <RatingBar
+        android:id="@+id/dialog_supermarket_rating"
+        style="@style/SupermarketRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_below="@+id/dialog_image"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="2" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dialog_image"
+        android:layout_below="@id/dialog_supermarket_rating"
         android:layout_centerInParent="true"
         android:scrollbars="none">
 
@@ -34,12 +47,12 @@
             android:id="@+id/dialog_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
             android:fontFamily="@font/gothamrounded"
             android:gravity="center"
             android:lineSpacingExtra="10dp"
+            android:padding="5dp"
             android:text="About Supermarket"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

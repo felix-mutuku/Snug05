@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,13 +64,15 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     ConnectivityManager cManager;
     NetworkInfo nInfo;
-    TextView back, supermarket_slogan, branch_text;
+    TextView back, supermarket_slogan, branch_text, offers, baby_kids, beauty_cosmetics, canned_goods, cleaning, cooking_oil,
+            dairy, drinks, food_cupboard, fresh_food, frozen, health_wellness, household, kitchen_dining, office_supplies,
+            sauces, snacks, toiletries;
     Dialog loading_dialog, description_dialog, branches_dialog, location_dialog, play_services_dialog, confirm_location_dialog,
             selected_branch_dialog;
     String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription,
-            SSupermarketRating, SCountry, SLocation, OLatitude, OLongitude, SServerTime, SBranchSelected, BLatitude, BLongitude;
-    ImageView supermarket_logo, supermarket_info, available;
-    RatingBar supermarket_rating;
+            SSupermarketRating, SCountry, SLocation, OLatitude, OLongitude, SServerTime, SBranchSelected, BLatitude,
+            BLongitude, SpersonID;
+    ImageView supermarket_logo, supermarket_info, available, search;
     ArrayList<String> SlidingImagesList = new ArrayList<String>();
     CarouselView carouselView;
     GoogleApiClient mGoogleApiClient;
@@ -91,11 +92,29 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         supermarket_slogan = findViewById(R.id.supermarket_slogan);
         supermarket_logo = findViewById(R.id.supermarket_logo);
         supermarket_info = findViewById(R.id.supermarket_info);
-        supermarket_rating = findViewById(R.id.supermarket_rating);
         carouselView = findViewById(R.id.sliding_images);
         branch_text = findViewById(R.id.branch_text);
         available = findViewById(R.id.available);
         recycler_view = findViewById(R.id.recycler_view);
+        search = findViewById(R.id.search);
+        offers = findViewById(R.id.offers);
+        baby_kids = findViewById(R.id.baby_kids);
+        beauty_cosmetics = findViewById(R.id.beauty_cosmetics);
+        canned_goods = findViewById(R.id.canned_goods);
+        cleaning = findViewById(R.id.cleaning);
+        cooking_oil = findViewById(R.id.cooking_oil);
+        dairy = findViewById(R.id.dairy);
+        drinks = findViewById(R.id.drinks);
+        food_cupboard = findViewById(R.id.food_cupboard);
+        fresh_food = findViewById(R.id.fresh_food);
+        frozen = findViewById(R.id.frozen);
+        health_wellness = findViewById(R.id.health_wellness);
+        household = findViewById(R.id.household);
+        kitchen_dining = findViewById(R.id.kitchen_dining);
+        office_supplies = findViewById(R.id.office_supplies);
+        sauces = findViewById(R.id.sauces);
+        snacks = findViewById(R.id.snacks);
+        toiletries = findViewById(R.id.toiletries);
 
         cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         assert cManager != null;
@@ -124,7 +143,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             showLocationDialog();
         }
 
-        //get day's ID to get description of
+        //get supermarket details
         SSupermarketID = getIntent().getStringExtra("id");
         SSupermarketName = getIntent().getStringExtra("name");
         SSupermarketImage = getIntent().getStringExtra("image");
@@ -167,7 +186,155 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             }
         });
 
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToSearch();
+            }
+        });
 
+        offers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("offers");
+            }
+        });
+
+        baby_kids.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("baby_kids");
+            }
+        });
+
+        beauty_cosmetics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("beauty_cosmetics");
+            }
+        });
+
+        canned_goods.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("canned_goods");
+            }
+        });
+
+        cleaning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("cleaning");
+            }
+        });
+
+        cooking_oil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("cooking_oil");
+            }
+        });
+
+        dairy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("dairy");
+            }
+        });
+
+        drinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("drinks");
+            }
+        });
+
+        food_cupboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("food_cupboard");
+            }
+        });
+
+        fresh_food.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("fresh_food");
+            }
+        });
+
+        frozen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("frozen");
+            }
+        });
+
+        health_wellness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("health_wellness");
+            }
+        });
+
+        household.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("household");
+            }
+        });
+
+        kitchen_dining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("kitchen_dining");
+            }
+        });
+
+        office_supplies.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("office_supplies");
+            }
+        });
+
+        sauces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("sauces");
+            }
+        });
+
+        snacks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("snacks");
+            }
+        });
+
+        toiletries.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCategories("toiletries");
+            }
+        });
+    }
+
+    private void goToCategories(String category) {
+        //start categories activity pass category to the intent
+        Intent intent = new Intent(ShoppingActivity.this, CategoriesActivity.class);
+        intent.putExtra("category_selected", category);
+        intent.putExtra("supermarketID", SSupermarketID);
+        intent.putExtra("supermarketName", SSupermarketName);
+        intent.putExtra("country", SCountry);
+        startActivity(intent);
+    }
+
+    private void goToSearch() {
+        //open search activity
+        Intent intent = new Intent(ShoppingActivity.this, SearchActivity.class);
+        intent.putExtra("id", SSupermarketID);
+        startActivity(intent);
     }
 
     private void showDescriptionDialog() {
@@ -181,6 +348,9 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         ImageView close_dialog = description_dialog.findViewById(R.id.close_dialog);
         TextView dialog_text = description_dialog.findViewById(R.id.dialog_text);
         ImageView dialog_image = description_dialog.findViewById(R.id.dialog_image);
+        RatingBar dialog_supermarket_rating = description_dialog.findViewById(R.id.dialog_supermarket_rating);
+
+        dialog_supermarket_rating.setRating(Float.parseFloat(SSupermarketRating));
 
         Glide
                 .with(ShoppingActivity.this)
@@ -213,7 +383,6 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                 .into(supermarket_logo);
 
         supermarket_slogan.setText(SSupermarketSlogan);
-        supermarket_rating.setRating(Float.parseFloat(SSupermarketRating));
 
         new GetSlidingAds().execute(new ApiConnector());
     }
@@ -376,10 +545,14 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     protected void onUserLeaveHint() {
         //when user presses home or a phone call comes in
         super.onUserLeaveHint();
-        stopLocationUpdates();
-        branches_dialog.dismiss();
-        loading_dialog.dismiss();
-        confirm_location_dialog.dismiss();
+        try {
+            stopLocationUpdates();
+            branches_dialog.dismiss();
+            loading_dialog.dismiss();
+            confirm_location_dialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void stopLocationUpdates() {
@@ -449,6 +622,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                 //returned time successfully
                 SServerTime = response.replaceAll(":", "");
                 loading_dialog.dismiss();
+
                 //when finished checking time
                 displayConfirmLocationDialog();
             } else {
@@ -550,6 +724,7 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     private void getUserInfoFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SCountry = sharedPreferences.getString(Constants.COUNTRY, "N/A");
+        SpersonID = sharedPreferences.getString(Constants.PERSON_ID, "N/A");
     }
 
     private void showLocationDialog() {
@@ -664,8 +839,8 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
                             if (available.equals("Open")) {
                                 //open supermarket clicked by the user
-                                loading_dialog.show();
                                 branches_dialog.dismiss();
+                                loading_dialog.show();
                                 showSelectedBranchDialog();
                             } else {
                                 //show toast that supermarket is closed
@@ -735,11 +910,12 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
             TextView dialog_delivery_duration = selected_branch_dialog.findViewById(R.id.dialog_delivery_duration);
             TextView dialog_delivery_cost = selected_branch_dialog.findViewById(R.id.dialog_delivery_cost);
             Button confirm_branch = selected_branch_dialog.findViewById(R.id.confirm_branch);
+            TextView dialog_essentials_cost = selected_branch_dialog.findViewById(R.id.dialog_essentials_cost);
 
             //show user the branch, distance and time it will take to deliver the items by road
             String[] combined = new GetBranchDistance(BLatitude, BLongitude).execute(new ApiConnector()).get();
             String distance = combined[0];
-            String duration = combined[1];
+            final String duration = combined[1];
 
             dialog_branch_distance.setText(String.format("%s %s", getString(R.string.distance), distance));
 
@@ -752,18 +928,36 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
 
             double double_distance = Double.parseDouble(distance);
 
+            int finalDeliveryCost = 0;
+            int finalEssentialCost = 0;
+
             if (double_distance > 10) {
                 //user has passed the threshold KMs of 10KMs
                 //charge 20KES per KM after the 10KMs
                 double_distance = double_distance * 20;//get price of distance over threshold
                 Long L = Math.round(double_distance);
                 int i = L.intValue();
-
+                //int ei = L.intValue()/2;
+                //calculated price of normal deliveries
                 dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
                         i, getString(R.string.kenya_shillings)));
+
+                finalDeliveryCost = i;
+
+                dialog_essentials_cost.setVisibility(View.GONE);//make it disappear since we don't need it
+
             } else {
+                int i = 200;
+                int ei = 100;
+                //calculated price of normal deliveries
                 dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
-                        200, getString(R.string.kenya_shillings)));
+                        i, getString(R.string.kenya_shillings)));
+                //calculated price of essentials deliveries
+                dialog_essentials_cost.setText(String.format("%s %s %s", getString(R.string.e_delivery_cost),
+                        ei, getString(R.string.kenya_shillings)));
+
+                finalDeliveryCost = i;
+                finalEssentialCost = ei;
             }
 
             back.setOnClickListener(new View.OnClickListener() {
@@ -775,14 +969,19 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
                 }
             });
 
+            final int finalDeliveryCost1 = finalDeliveryCost;
+            final int finalEssentialCost1 = finalEssentialCost;
             confirm_branch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //when user has confirmed the branch they want to shop in
                     selected_branch_dialog.dismiss();
-                    loading_dialog.show();
+                    //loading_dialog.show();
                     branch_text.setText(String.format("Shopping from %s", SBranchSelected));//show user branch they are shopping from
-                    new GetProducts().execute(new ApiConnector());
+
+                    new GetEssentialProducts().execute(new ApiConnector());
+
+                    storeShoppingDetails(duration, finalDeliveryCost1, finalEssentialCost1);
                 }
             });
 
@@ -793,6 +992,23 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    private void storeShoppingDetails(String finalDuration, int finalDeliveryCost, int finalEssentialCost) {
+        //stores shopping details and location of the user
+        //store supermarket, branch, delivery duration, delivery cost, essentials delivery, set prompting to false
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.SUPERMARKET_NAME, SSupermarketName);
+        editor.putString(Constants.SUPERMARKET_BRANCH, SBranchSelected);
+        editor.putString(Constants.DELIVERY_LATITUDE, OLatitude);
+        editor.putString(Constants.DELIVERY_LONGITUDE, OLongitude);
+        editor.putString(Constants.DELIVERY_DURATION, finalDuration);
+        editor.putString(Constants.DELIVERY_COST, String.valueOf(finalDeliveryCost));
+        editor.putString(Constants.ESSENTIALS_DELIVERY_COST, String.valueOf(finalEssentialCost));
+        editor.apply();
+
+        new updateUserLocation(Double.parseDouble(OLatitude), Double.parseDouble(OLongitude)).execute(new ApiConnector());
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -818,19 +1034,17 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     public void setProductsAdapter(JSONArray jsonArray) {
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.HORIZONTAL);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recycler_view.setLayoutManager(staggeredGridLayoutManager);
         try {
-            jsonArray = jsonArray;
-            recycler_view.setAdapter(new ProductsAdapter(jsonArray, this, recycler_view));
+            recycler_view.setAdapter(new ProductsAdapter(jsonArray, this, recycler_view, SSupermarketID));
+            loading_dialog.dismiss();
             if (jsonArray == null) {
                 available.setVisibility(View.VISIBLE);
-                loading_dialog.dismiss();
                 //swipe_refresh_layout.setVisibility(View.VISIBLE);
             } else {
                 available.setVisibility(View.GONE);
             }
-            loading_dialog.dismiss();
             //swipe_refresh_layout.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -838,11 +1052,11 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
+    private class GetEssentialProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
             try {
-                return params[0].GetProducts(SCountry);
+                return params[0].GetEssentialProducts(SCountry);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -852,6 +1066,45 @@ public class ShoppingActivity extends AppCompatActivity implements GoogleApiClie
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             setProductsAdapter(jsonArray);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class updateUserLocation extends AsyncTask<ApiConnector, Long, String> {
+        Double DLatitude, DLongitude;
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        updateUserLocation(double latitude, double longitude) {
+            DLatitude = latitude;
+            DLongitude = longitude;
+        }
+
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].UpdateUserLocation(SpersonID, DLatitude, DLongitude);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            try {
+                if (response.equals("Successful")) {
+                    //confirm that location in database is updated
+                    /*Toast toast = Toast.makeText(ShoppingActivity.this, "Location Updated :)", Toast.LENGTH_SHORT);
+                    View toastView = toast.getView(); //This'll return the default View of the toast
+                    TextView toastMessage = toastView.findViewById(android.R.id.message);
+                    toastMessage.setTextSize(12);
+                    toastMessage.setTextColor(getResources().getColor(R.color.white));
+                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                    toastMessage.setGravity(Gravity.CENTER);
+                    toastMessage.setCompoundDrawablePadding(10);
+                    toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                    toast.show();*/
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

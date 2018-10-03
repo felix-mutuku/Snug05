@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.snugjar.www.youshopwedeliver.Connectors.Constants;
@@ -27,16 +28,17 @@ import java.text.DecimalFormat;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
     private JSONArray dataArray;
-    String Image, availability, Sname;
+    String supermarketID;
     private static LayoutInflater inflater = null;
     Activity activity;
     private RecyclerView recycler_View;
 
-    public ProductsAdapter(JSONArray jsonArray, Activity a, RecyclerView r) {
+    public ProductsAdapter(JSONArray jsonArray, Activity a, RecyclerView r, String SSupermarketID) {
         try {
             this.dataArray = jsonArray;
             activity = a;
             recycler_View = r;
+            supermarketID = SSupermarketID;
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         try {
-            JSONObject jsonObject = this.dataArray.getJSONObject(position);
+            final JSONObject jsonObject = this.dataArray.getJSONObject(position);
 
             Glide
                     .with(activity.getApplicationContext())
@@ -81,7 +83,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             holder.product_name.setText(jsonObject.getString("name"));
 
             DecimalFormat formatter = new DecimalFormat("#,###,###");
-            Integer price = Integer.valueOf(jsonObject.getString("price"));
+            String finalPrice = String.format("%s_price", supermarketID);
+
+            Integer price = Integer.valueOf(jsonObject.getString(finalPrice));
             String formattedString = formatter.format(price);
 
             holder.product_price.setText(String.format("KSh %s", formattedString));
@@ -91,6 +95,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     //when an item on the list is clicked
+                    try {
+                        Toast toast = Toast.makeText(activity, jsonObject.getString("name"), Toast.LENGTH_SHORT);
+                        toast.show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             });
