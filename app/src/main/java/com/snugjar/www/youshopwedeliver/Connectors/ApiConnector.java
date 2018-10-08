@@ -1,7 +1,6 @@
 package com.snugjar.www.youshopwedeliver.Connectors;
 
 import android.net.Uri;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -710,7 +709,172 @@ public class ApiConnector {
         HttpsURLConnection urlConnection = null;
 
         try {
-            URL url = new URL(Constants.BASE_URL_LOGIC + "getSubCategoryProducts.php?country=" + country+ "&category=" + category+ "&subcategory=" + subcategory);
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getSubCategoryProducts.php?country=" + country + "&category=" + category + "&subcategory=" + subcategory);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
+
+    //used to check whether mobile number already exists in database before adding it
+    public String GetOrderID(String supermarketName) {
+        StringBuilder result = new StringBuilder();
+        HttpsURLConnection urlConnection = null;
+        String response = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getOrderID.php?supermarketName=" + supermarketName);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            response = String.valueOf(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return response;
+
+    }
+
+    public String AddToCart(String orderID, String productName, String personID, String count, int total, String deviceIMEI, String image) {
+        StringBuilder result = new StringBuilder();
+        HttpsURLConnection urlConnection = null;
+        String response = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "addToCart.php?orderID=" + orderID +
+                    "&productName=" + productName +
+                    "&personID=" + personID +
+                    "&count=" + count +
+                    "&total=" + total +
+                    "&deviceIMEI=" + deviceIMEI +
+                    "&image=" + image);
+
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            response = String.valueOf(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return response;
+
+    }
+
+    //used to get the current location of the user
+    public String GetUserLocation(double latitude, double longitude) {
+        StringBuilder result = new StringBuilder();
+        String SLocation = null;
+        JSONObject jsonObject = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.REVERSE_GEOCODE_API + latitude + "," + longitude + Constants.REVERSE_GEOCODE_API2);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonObject = new JSONObject(String.valueOf(result));
+
+                SLocation = jsonObject.getJSONArray("results")
+                        .getJSONObject(0)
+                        .getString("formatted_address");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return SLocation;
+
+    }
+
+    //used to get all the supermarket branches for the supermarket selected by the user
+    public JSONArray GetCartItems(String orderID, String personID, String IMEI) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getCartItems.php?orderID=" + orderID +
+                    "&personID=" + personID +
+                    "&IMEI=" + IMEI);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());

@@ -94,7 +94,7 @@ public class CategoriesFragment extends Fragment {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recycler_view.setLayoutManager(staggeredGridLayoutManager);
         try {
-            recycler_view.setAdapter(new ProductsAdapter(jsonArray, getActivity(), recycler_view, supermarketID));
+            recycler_view.setAdapter(new ProductsAdapter(jsonArray, getActivity(), recycler_view, supermarketID, supermarketName));
             if (jsonArray == null) {
                 linear_available.setVisibility(View.VISIBLE);
                 //swipe_refresh_layout.setVisibility(View.VISIBLE);

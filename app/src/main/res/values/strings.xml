@@ -195,5 +195,13 @@
     <string name="men_shaving">men_shaving</string>
     <string name="adult_diapers">adult_diapers</string>
     <string name="no_products_in_this_category">No products in this category :(</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="equals_sign">=</string>
+    <string name="multiplication_sign">X</string>
+    <string name="branches_info">The nearer you are to the branch of the supermarket, the cheaper the delivery cost and your convenience.</string>
+    <string name="got_it">Got it</string>
+    <string name="cart">Your cart</string>
+    <string name="feed">News feed</string>
+    <string name="empty_cart">Your cart is currently empty :(</string>
 
 </resources>

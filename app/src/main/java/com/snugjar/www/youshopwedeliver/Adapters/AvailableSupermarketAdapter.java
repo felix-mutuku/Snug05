@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.snugjar.www.youshopwedeliver.Activities.BranchesActivity;
 import com.snugjar.www.youshopwedeliver.Activities.ShoppingActivity;
 import com.snugjar.www.youshopwedeliver.Connectors.Constants;
 import com.snugjar.www.youshopwedeliver.R;
@@ -129,7 +130,7 @@ public class AvailableSupermarketAdapter extends RecyclerView.Adapter<AvailableS
                                             //open supermarket details to start shopping
                                             try {
                                                 //open supermarket clicked by the user
-                                                Intent intent = new Intent(activity, ShoppingActivity.class);
+                                                Intent intent = new Intent(activity, BranchesActivity.class);
                                                 intent.putExtra("id", json2Object.getString("id"));
                                                 intent.putExtra("name", json2Object.getString("name"));
                                                 intent.putExtra("image", json2Object.getString("image"));

@@ -67,6 +67,8 @@ public class CategoriesActivity extends AppCompatActivity {
     private void goToSearch() {
         //open activity ya search
         Intent intent = new Intent(CategoriesActivity.this, SearchActivity.class);
+        intent.putExtra("id", SSupermarketID);
+        intent.putExtra("name", SSupermarketName);
         startActivity(intent);
     }
 

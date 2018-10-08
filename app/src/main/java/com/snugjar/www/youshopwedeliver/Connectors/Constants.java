@@ -8,9 +8,12 @@ public class Constants {
     public static final String BASE_URL_SUPERMARKET_ADS = "https://www.snugjar.com/Apps/Shopdrop/SupermarketAds/";
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.snugjar.www.youshopwedeliver";
     public static final String GOOGLE_MAPS_API_KEY = "AIzaSyCCZpukF_GBg6rmdow7IUlYSBQcpER0v4E";
+    public static final String GOOGLE_MAPS_LOCATION_API_KEY = "AIzaSyDnwK-37yfkCLo1VA3A0X_DPSp2Q-CTv9U";
     public static final String DISTANCE_MATRIX_API = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
     public static final String DISTANCE_MATRIX_API2 = "&destinations=";
     public static final String DISTANCE_MATRIX_API3 = "&mode=driving&departure_time=now&key=" + GOOGLE_MAPS_API_KEY;
+    public static final String REVERSE_GEOCODE_API = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
+    public static final String REVERSE_GEOCODE_API2 = "&key="+ GOOGLE_MAPS_LOCATION_API_KEY;
 
     //saving a user's personal data in shared preferences
     public static final String SHARED_PREF_NAME = "Shopdrop_pref";
@@ -33,4 +36,6 @@ public class Constants {
     public static final String DELIVERY_DURATION = "shopdrop_delivery_duration";
     public static final String DELIVERY_COST = "shopdrop_delivery_cost";
     public static final String ESSENTIALS_DELIVERY_COST = "shopdrop_delivery_essentials_cost";
+
+    public static final String ORDER_ID = "shopdrop_order_id";
 }

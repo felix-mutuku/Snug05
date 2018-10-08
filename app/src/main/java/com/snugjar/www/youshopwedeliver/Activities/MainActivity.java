@@ -26,9 +26,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +48,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.snugjar.www.youshopwedeliver.Connectors.ApiConnector;
 import com.snugjar.www.youshopwedeliver.Connectors.Constants;
+import com.snugjar.www.youshopwedeliver.Helpers.MyBounceInterpolator;
 import com.snugjar.www.youshopwedeliver.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     CircleImageView profile_image;
     ImageView settings;
-    TextView user_location, supermarkets, orders, about, help, feedback, share_app;
+    TextView user_location, supermarkets, orders, about, help, feedback, share_app, cart, feed;
     String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone;
     Dialog location_dialog, loading_dialog, profile_dialog, play_services_dialog, cannot_use_dialog;
     GoogleApiClient mGoogleApiClient;
@@ -93,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         feedback = findViewById(R.id.feedback);
         share_app = findViewById(R.id.share_app);
         carouselView = findViewById(R.id.sliding_ads);
+        cart = findViewById(R.id.cart);
+        feed = findViewById(R.id.feed);
 
         //check to see whether user has enabled location services
         if (isLocationServiceEnabled()) {
@@ -110,12 +116,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             showLocationDialog();
         }
 
+        cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open cart page
+                goToCart();
+            }
+        });
+
+        feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open feed page
+                goToFeed();
+            }
+        });
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Show profile dialog
-                showProfileDialog();
+                animateProfilePic();
             }
         });
 
@@ -123,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             @Override
             public void onClick(View v) {
                 //open supermarkets page
-                openSupermarketActivity(v);
+                goToSupermarkets();
             }
         });
 
@@ -174,40 +195,365 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //go to settings page
+                goToSettings();
+            }
+        });
+
+    }
+
+    private void goToSettings() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        settings.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //show settings page
+            }
+        });
+    }
+
+    private void animateProfilePic() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        profile_image.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                showProfileDialog();
+            }
+        });
+    }
+
+    private void goToSupermarkets() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        supermarkets.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    private void goToFeed() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        feed.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                //startActivity(i);
+            }
+        });
+    }
+
+    private void goToCart() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        cart.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                Intent i = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void shareApp() {
-        try {
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("text/plain");
-            i.putExtra(Intent.EXTRA_SUBJECT, "Shopdrop App");
-            String sAux = "\nThe everyday shopping App you have been waiting for :)" +
-                    "\nSelect from a wide range of supermarkets in your area of choice" +
-                    "\nYou shop, we deliver it straight into your hands in a coupe of minutes. Happy Shopping :)" +
-                    "\n\n";
-            sAux = sAux + Constants.PLAY_STORE_URL;
-            i.putExtra(Intent.EXTRA_TEXT, sAux);
-            startActivity(Intent.createChooser(i, "choose one"));
-        } catch (Exception e) {
-            //tell user to try again
-            e.printStackTrace();
-        }
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
+
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        share_app.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                try {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Shopdrop App");
+                    String sAux = "\nThe everyday shopping App you have been waiting for :)" +
+                            "\nSelect from a wide range of supermarkets in your area of choice" +
+                            "\nYou shop, we deliver it straight into your hands in a coupe of minutes. Happy Shopping :)" +
+                            "\n\n";
+                    sAux = sAux + Constants.PLAY_STORE_URL;
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "choose one"));
+                } catch (Exception e) {
+                    //tell user to try again
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     private void goToFeedback() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
 
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        feedback.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                //startActivity(i);
+            }
+        });
     }
 
     private void goToHelp() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
 
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        help.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                //startActivity(i);
+            }
+        });
     }
 
     private void goToAbout() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
 
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        about.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                //startActivity(i);
+            }
+        });
     }
 
     private void goToOrders() {
+        //Load the animation
+        final Animation myAnim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.bounce);
+        double animationDuration = 500; //time in seconds
+        myAnim.setDuration((long) animationDuration);
 
+        //Use custom animation interpolator to achieve the bounce effect
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(3, 7);
+
+        myAnim.setInterpolator(interpolator);
+
+        orders.startAnimation(myAnim);
+
+        //Run button animation again after it finished
+        myAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+                //when animation starts
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+                //when animation repeats
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                //animateButton();
+                //Intent i = new Intent(MainActivity.this, SupermarketsActivity.class);
+                //startActivity(i);
+            }
+        });
     }
 
     public boolean isLocationServiceEnabled() {
@@ -557,7 +903,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         if (mLocation != null) {
             try {
-                getAddress(MainActivity.this, mLocation.getLatitude(), mLocation.getLongitude());
+                //getAddress(MainActivity.this, mLocation.getLatitude(), mLocation.getLongitude());
+                String JSONLocation = new GetUserLocation(mLocation.getLatitude(), mLocation.getLongitude()).execute(new ApiConnector()).get();
+                user_location.setText(JSONLocation);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -582,45 +930,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //user has moved from start location
         if (location != null) {
             try {
-                getAddress(MainActivity.this, mLocation.getLatitude(), mLocation.getLongitude());
+                //getAddress(MainActivity.this, mLocation.getLatitude(), mLocation.getLongitude());
+                String JSONLocation = new GetUserLocation(mLocation.getLatitude(), mLocation.getLongitude()).execute(new ApiConnector()).get();
+                user_location.setText(JSONLocation);
+                new updateUserLocation(mLocation.getLatitude(), mLocation.getLongitude()).execute(new ApiConnector());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void getAddress(Context context, double LATITUDE, double LONGITUDE) {
-        //Set Address
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null && addresses.size() > 0) {
+    @SuppressLint("StaticFieldLeak")
+    private class GetUserLocation extends AsyncTask<ApiConnector, Long, String> {
+        double Latitude, Longitude;
 
-                String address = addresses.get(0).getAddressLine(0);
-                //getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName(); //Only if available else return NULL
+        GetUserLocation(double latitude, double longitude) {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
 
-                //Log.d("D", "getAddress:  address" + address);
-                //Log.d("D", "getAddress:  city" + city);
-                //Log.d("D", "getAddress:  state" + state);
-                //Log.d("D", "getAddress:  postalCode" + postalCode);//mostly returns null
-                //Log.d("D", "getAddress:  knownName" + knownName);
-                //Log.d("D", "getAddress:  country" + country);
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].GetUserLocation(Latitude, Longitude);
+        }
 
-                user_location.setText(address);
-
-                checkCountry(country, LATITUDE, LONGITUDE);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onPostExecute(String args) {
+            //pass arguments to display on branches
         }
     }
 
-    private void checkCountry(String country, double latitude, double longitude) {
+    /*private void checkCountry(String country, double latitude, double longitude) {
         //update user location in database
         new updateUserLocation(latitude, longitude).execute(new ApiConnector());
 
@@ -636,7 +978,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //update new country in database for MIS use
             new newCountryCollect(country).execute(new ApiConnector());
         }
-    }
+    }*/
 
     @SuppressLint("StaticFieldLeak")
     private class newCountryCollect extends AsyncTask<ApiConnector, Long, String> {
@@ -813,19 +1155,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
 
         carouselView.setPageCount(SlidingImagesList.size());
-    }
-
-    public void openSupermarketActivity(View view) {
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation(this, view, "transition");
-        int revealX = (int) (view.getX() + view.getWidth() / 2);
-        int revealY = (int) (view.getY() + view.getHeight() / 2);
-
-        Intent intent = new Intent(this, SupermarketsActivity.class);
-        intent.putExtra(SupermarketsActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
-        intent.putExtra(SupermarketsActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
-
-        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 
     @SuppressLint("StaticFieldLeak")

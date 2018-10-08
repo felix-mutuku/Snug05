@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:gravity="center"
     android:padding="7dp">
 
@@ -13,19 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/supermarket_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="5"
             android:gravity="center"
-            android:drawablePadding="5dp"
             android:lineSpacingExtra="5dp"
-            android:drawableStart="@drawable/ic_store_black_24dp"
-            android:lines="3"
+            android:drawableTop="@drawable/ic_store_black_24dp"
+            android:lines="2"
             android:paddingBottom="3dp"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
@@ -36,12 +34,13 @@
 
         <TextView
             android:id="@+id/supermarket_availability"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_margin="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_button3"
             android:gravity="center"
             android:text="@string/closed"
             android:textColor="@color/colorPrimaryDark"
@@ -55,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
         android:layout_below="@id/linear1"
-        android:layout_marginEnd="7dp"
-        android:layout_marginStart="7dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:background="@color/gray" />
 </RelativeLayout>

@@ -32,7 +32,7 @@ public class SearchActivity extends AppCompatActivity {
     SwipeRefreshLayout swipe_refresh_layout;
     ImageView back, logo;
     RecyclerView recycler_view;
-    String searchText, SSupermarketID, SCountry;
+    String searchText, SSupermarketID, SCountry, SSupermarketName;
     JSONArray jsonArray;
 
     @Override
@@ -48,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
 
         //get supermarketID
         SSupermarketID = getIntent().getStringExtra("id");
+        SSupermarketName = getIntent().getStringExtra("name");
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SCountry = sharedPreferences.getString(Constants.COUNTRY, "N/A");
 
@@ -118,7 +119,7 @@ public class SearchActivity extends AppCompatActivity {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recycler_view.setLayoutManager(staggeredGridLayoutManager);
         try {
-            recycler_view.setAdapter(new ProductsAdapter(jsonArray, this, recycler_view, SSupermarketID));
+            recycler_view.setAdapter(new ProductsAdapter(jsonArray, this, recycler_view, SSupermarketID, SSupermarketName));
             /*if (jsonArray == null) {
                 available.setVisibility(View.VISIBLE);
                 swipe_refresh_layout.setVisibility(View.VISIBLE);

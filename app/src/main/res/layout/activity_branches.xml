@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/carrot"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:layout_below="@id/linear_price"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/cabbage" />
+
+    <ImageView
+        android:id="@+id/milk"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:layout_below="@id/linear_price"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/steak" />
+
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/ic_chevron_left_black_24dp2"
+        android:fontFamily="@font/gothamrounded"
+        android:gravity="center"
+        android:paddingEnd="18dp"
+        android:text="@string/supermarkets"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:padding="15dp"
+        app:srcCompat="@drawable/ic_info_black_24dp3" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/relative_current_location"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_below="@id/back"
+        android:layout_marginEnd="10dp"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/select_branch_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_below="@+id/logo"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:lines="1"
+            android:paddingStart="15dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="3dp"
+            android:text="@string/current_location"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:fontFamily="@font/gothamrounded" />
+
+        <TextView
+            android:id="@+id/user_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_branch_text"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="30dp"
+            android:drawableTop="@drawable/ic_my_location_black_24dp"
+            android:fontFamily="@font/gothamrounded"
+            android:gravity="center"
+            android:padding="5dp"
+            android:drawablePadding="20dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="Current location"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/retry_location"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/user_location"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_button7"
+            android:padding="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/retry"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:fontFamily="@font/gothamrounded" />
+
+        <Button
+            android:id="@+id/confirm_location"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/user_location"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_button4"
+            android:padding="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/confirm_location"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:fontFamily="@font/gothamrounded" />
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/relative_branches"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/back"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/close_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:lines="1"
+            android:paddingStart="15dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="3dp"
+            android:text="@string/select_branch"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:fontFamily="@font/gothamrounded" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/branch_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/close_dialog"
+            android:layout_centerInParent="true"
+            android:scrollbars="none" />
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/relative_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/close_dialog"
+            android:layout_centerInParent="true"
+            android:padding="5dp">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/loading"
+                style="@style/AVLoadingIndicatorView.Large"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:layout_margin="20dp"
+                android:visibility="visible"
+                app:indicatorColor="@color/colorPrimaryDark"
+                app:indicatorName="PacmanIndicator" />
+
+            <TextView
+                android:id="@+id/soon_Txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/loading"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="@string/getting_branches"
+                android:textColor="@color/medium_gray"
+                android:textSize="14sp"
+                app:fontFamily="@font/gothamrounded" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/relative_confirm_branch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dialog_branch_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/ic_store_black_24dp"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:lines="3"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="3dp"
+                android:text="@string/app_name"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp"
+                app:fontFamily="@font/gothamrounded" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:id="@+id/dialog_branch_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="Distance: 30 KMS"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:fontFamily="@font/gothamrounded" />
+
+                <TextView
+                    android:id="@+id/dialog_delivery_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/gothamrounded"
+                    android:gravity="center"
+                    android:text="Delivery duration: 33 Minutes"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/dialog_delivery_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/gothamrounded"
+                    android:gravity="center"
+                    android:text="Delivery cost: 200 KES"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/dialog_essentials_cost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/gothamrounded"
+                    android:gravity="center"
+                    android:text="Essentials Delivery cost: 200 KES"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/confirm_branch"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/linear1"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_button4"
+            android:padding="10dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/select_this_branch"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:fontFamily="@font/gothamrounded" />
+    </RelativeLayout>
+</RelativeLayout>
