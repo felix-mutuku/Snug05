@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Shopdrop</string>
+    <string name="app_name">Trolleyhut</string>
     <string name="retry">Retry</string>
     <string name="check_your_internet">Please check your internet connection.\nAnd try again</string>
     <string name="welcome_to_shopdrop">Welcome to Shopdrop</string>
@@ -203,5 +203,12 @@
     <string name="cart">Your cart</string>
     <string name="feed">News feed</string>
     <string name="empty_cart">Your cart is currently empty :(</string>
+    <string name="select_delivery_method">Please select how you want to receive your goods</string>
+    <string name="deliver_to_doorstep">I want it delivered t my location</string>
+    <string name="pick_up_from_branch">I want to pick it up myself from the store</string>
+    <string name="are_you_sure_you_want_to_checkout">Are you sure you want to Chechout ?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="now_location">Your current location</string>
 
 </resources>
