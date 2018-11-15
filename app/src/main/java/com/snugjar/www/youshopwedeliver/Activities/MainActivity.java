@@ -926,7 +926,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @SuppressLint("MissingPermission")
     @Override
     public void onLocationChanged(Location location) {
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        /*mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         //user has moved from start location
         if (location != null) {
             try {
@@ -937,7 +937,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @SuppressLint("StaticFieldLeak")

@@ -210,5 +210,12 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="now_location">Your current location</string>
+    <string name="sub_total">Subtotal</string>
+    <string name="cart_empty">Cart is Empty</string>
+    <string name="delivery_fee">Delivery Cost</string>
+    <string name="vat">VAT</string>
+    <string name="total">Total Payable</string>
+    <string name="proceed_to_payments">Proceed To Payment</string>
+    <string name="add_voucher_next">You will be able to add a voucher in the next step</string>
 
 </resources>
