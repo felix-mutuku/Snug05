@@ -217,5 +217,20 @@
     <string name="total">Total Payable</string>
     <string name="proceed_to_payments">Proceed To Payment</string>
     <string name="add_voucher_next">You will be able to add a voucher in the next step</string>
+    <string name="proceed_to_summary">Proceed To Summary</string>
+    <string name="select_payment_method">Select Payment Method</string>
+    <string name="m_pesa">M-PESA</string>
+    <string name="airtel_money">Airtel Money</string>
+    <string name="t_kash">T-KASH</string>
+    <string name="use_voucher">Use a voucher</string>
+    <string name="enter_a_voucher_code">Enter a Voucher Code</string>
+    <string name="apply">Apply</string>
+    <string name="use_loyalty_card">Do you have a loyalty card ?</string>
+    <string name="enter_loyalty_card_number">Enter Loyalty Card Number</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="your_order">Your Order</string>
+    <string name="delivery_method">Delivery Method</string>
+    <string name="delivery_location">Delivery Location</string>
+    <string name="payment_method">Payment Method</string>
 
 </resources>
