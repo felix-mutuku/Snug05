@@ -36,6 +36,9 @@ public class Constants {
     public static final String DELIVERY_DURATION = "trolleyhut_delivery_duration";
     public static final String DELIVERY_COST = "trolleyhut_delivery_cost";
     public static final String ESSENTIALS_DELIVERY_COST = "trolleyhut_delivery_essentials_cost";
+    public static final String DELIVERY_PRICE = "trolleyhut_delivery_price";
+    public static final String PICKUP_PRICE = "trolleyhut_pickup_price";
+    public static final String CURRENCY = "trolleyhut_currency";
 
     public static final String ORDER_ID = "trolleyhut_order_id";
 }

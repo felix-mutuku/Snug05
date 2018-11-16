@@ -944,4 +944,45 @@ public class ApiConnector {
         return response;
 
     }
+
+    //used to get specific details about the user when requested in the profile
+    public JSONArray GetPricesNCurrency (String country) {
+        StringBuilder result = new StringBuilder();
+        JSONArray jsonArray = null;
+        HttpsURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getPricesNCurrency.php?country=" + country);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            //handing the JSON to return to function
+            try {
+                jsonArray = new JSONArray(String.valueOf(result));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return jsonArray;
+
+    }
 }

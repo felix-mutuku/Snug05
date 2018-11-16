@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -20,13 +18,10 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -58,10 +53,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -71,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     CircleImageView profile_image;
     ImageView settings;
     TextView user_location, supermarkets, orders, about, help, feedback, share_app, cart, feed;
-    String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone;
+    String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone,
+            SDeliveryPrice, SPickupPrice, SCurrency;
     Dialog location_dialog, loading_dialog, profile_dialog, play_services_dialog, cannot_use_dialog;
     GoogleApiClient mGoogleApiClient;
     Location mLocation;
@@ -1086,6 +1079,38 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         .crossFade()
                         .into(profile_image);
 
+                new GetPricesNCurrency().execute(new ApiConnector());
+                //updateSharedPreferences();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                loading_dialog.dismiss();
+                getUserInfoFromPreferences();
+            }
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetPricesNCurrency extends AsyncTask<ApiConnector, Long, JSONArray> {
+        @Override
+        protected JSONArray doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].GetPricesNCurrency(SCountry);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            try {
+                JSONObject item = jsonArray.getJSONObject(0);
+
+                SDeliveryPrice = item.getString("delivery_price");
+                SPickupPrice = item.getString("pickup_price");
+                SCurrency = item.getString("currency");
+
+                Toast toast = Toast.makeText(MainActivity.this, SDeliveryPrice + SPickupPrice + SCurrency, Toast.LENGTH_LONG);
+                toast.show();
+
                 updateSharedPreferences();
 
             } catch (Exception e) {
@@ -1107,6 +1132,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         editor.putString(Constants.COUNTRY, SCountry);
         editor.putString(Constants.PHONE, SPhone);
         editor.putString(Constants.DATE_JOINED, SJoinDate);
+        editor.putString(Constants.DELIVERY_PRICE, SDeliveryPrice);
+        editor.putString(Constants.PICKUP_PRICE, SPickupPrice);
+        editor.putString(Constants.CURRENCY, SCurrency);
+
         editor.apply();
 
         loading_dialog.dismiss();
