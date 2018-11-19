@@ -64,6 +64,7 @@
         android:gravity="center"
         android:lineSpacingExtra="5dp"
         android:lines="1"
+        android:textAllCaps="true"
         android:padding="3dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"

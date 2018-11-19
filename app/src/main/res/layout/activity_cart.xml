@@ -130,6 +130,7 @@
             android:fontFamily="@font/gothamrounded"
             android:padding="10dp"
             android:lines="1"
+            android:textAllCaps="true"
             android:gravity="center"
             android:background="@color/colorAccent"
             android:textColor="@color/white"

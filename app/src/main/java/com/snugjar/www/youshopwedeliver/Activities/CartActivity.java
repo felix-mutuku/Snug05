@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.snugjar.www.youshopwedeliver.Adapters.CartAdapter;
 import com.snugjar.www.youshopwedeliver.Connectors.ApiConnector;
@@ -30,12 +31,14 @@ import com.snugjar.www.youshopwedeliver.R;
 
 import org.json.JSONArray;
 
+import java.text.DecimalFormat;
+
 public class CartActivity extends AppCompatActivity {
     TextView back, total_sub_price;
     ImageView info, checkout;
     LinearLayout linear_available;
     SwipeRefreshLayout swipe_refresh_layout;
-    String SIMEI, SOrderID, SPersonID;
+    String SIMEI, SOrderID, SPersonID, SCurrency;
     RecyclerView recycler_view;
     Dialog loading_dialog;
 
@@ -98,8 +101,17 @@ public class CartActivity extends AppCompatActivity {
         loading_dialog.show(); //don't forget to dismiss the dialog when done loading
 
         //get current cart and total amount for the cart
+        getCurrencyNPrices();
         new GetCartItems().execute(new ApiConnector());
         new GetSubTotal().execute(new ApiConnector());
+    }
+
+    private void getCurrencyNPrices() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        //SDeliveryPrice = sharedPreferences.getString(Constants.DELIVERY_PRICE, "N/A");
+        //SPickupPrice = sharedPreferences.getString(Constants.PICKUP_PRICE, "N/A");
+        SCurrency = sharedPreferences.getString(Constants.CURRENCY, "N/A");
+        //SPricePerKilometre = sharedPreferences.getString(Constants.PRICE_PER_KILOMETRE, "N/A");
     }
 
     private void goToCheckout() {
@@ -156,14 +168,20 @@ public class CartActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String response) {
-            if (response.equals("0")) {
-                total_sub_price.setText(getString(R.string.cart_empty));
-            } else {
-                total_sub_price.setText(String.format("Subtotal : %s KES", response));
-            }
+            /*Toast toast = Toast.makeText(CartActivity.this, response, Toast.LENGTH_SHORT);
+            toast.show();*/
 
-            loading_dialog.dismiss();
-            /*try {
+            try {
+                int subTotal = Integer.parseInt(response);
+                DecimalFormat formatter = new DecimalFormat("#,###,###");
+                String formattedString = formatter.format(subTotal);
+
+                total_sub_price.setText(String.format("Subtotal : %s %s", formattedString, SCurrency));//set the price in human readable format
+                //loading_dialog.dismiss();
+
+                new GetItemsCount().execute(new ApiConnector());
+
+                /*try {
 
                 if (Objects.equals(response, "Exist")) {
                     //user already in database, proceed to main
@@ -172,10 +190,38 @@ public class CartActivity extends AppCompatActivity {
                     //user absent in database, confirm details first
                     displayConfirmDialog();
                 }
-
-            } catch (Exception e) {
+                } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+                }*/
+            } catch (Exception e) {
+                total_sub_price.setText(getString(R.string.cart_empty));
+                loading_dialog.dismiss();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetItemsCount extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            return params[0].getCartItemsNumber(SIMEI, SPersonID, SOrderID);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            //insert number into cart items shared preference
+            SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(Constants.CART_ITEMS_NUMBER, response);
+            editor.apply();
+
+            /*Toast toast = Toast.makeText(CartActivity.this, response, Toast.LENGTH_SHORT);
+            toast.show();*/
+
+            loading_dialog.dismiss();
         }
     }
 }

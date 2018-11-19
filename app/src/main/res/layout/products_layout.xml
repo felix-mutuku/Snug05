@@ -47,6 +47,7 @@
         android:lineSpacingExtra="5dp"
         android:lines="1"
         android:padding="3dp"
+        android:textAllCaps="true"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:text="@string/coming_soon"

@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
     private JSONArray dataArray;
-    String supermarketID, supermarketName, orderID, personID, deviceIMEI;
+    String supermarketID, supermarketName, orderID, personID, deviceIMEI, SCurrency;
     private static LayoutInflater inflater = null;
     Activity activity;
     private RecyclerView recycler_View;
@@ -52,9 +52,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             supermarketID = SSupermarketID;
             supermarketName = SSupermarketName;
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            getCurrencyNPrices();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getCurrencyNPrices() {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        //SDeliveryPrice = sharedPreferences.getString(Constants.DELIVERY_PRICE, "N/A");
+        //SPickupPrice = sharedPreferences.getString(Constants.PICKUP_PRICE, "N/A");
+        SCurrency = sharedPreferences.getString(Constants.CURRENCY, "N/A");
+        //SPricePerKilometre = sharedPreferences.getString(Constants.PRICE_PER_KILOMETRE, "N/A");
     }
 
     @Override
@@ -101,7 +110,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             final Integer price = Integer.valueOf(jsonObject.getString(finalPrice));
             String formattedString = formatter.format(price);
 
-            holder.product_price.setText(String.format("KSh %s", formattedString));
+            holder.product_price.setText(String.format("%s %s", formattedString, SCurrency));
 
             //implement setOnClickListener event on item view.
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -169,10 +178,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         product_name.setText(productName);//set the name
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String formattedString = formatter.format(d_price);
-        item_price.setText(String.format("KSh %s", formattedString));//set the price in human readable format
+        item_price.setText(String.format("%s %s", formattedString, SCurrency));//set the price in human readable format
         item_count.setText("1");//set the count of the items which is "1" by default
 
-        item_total_cost.setText(String.format("Ksh. %d", d_price));
+        item_total_cost.setText(String.format("%s %s", formattedString, SCurrency));
         loading.setVisibility(View.INVISIBLE);
 
         close_dialog.setOnClickListener(new View.OnClickListener() {
@@ -197,7 +206,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
                 total = d_price * count;
 
-                item_total_cost.setText(String.format("Ksh. %d", total));
+                DecimalFormat formatter = new DecimalFormat("#,###,###");
+                String formattedString = formatter.format(total);
+
+                item_total_cost.setText(String.format("%s %s", formattedString, SCurrency));
             }
         });
 
@@ -216,7 +228,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
                     total = d_price * count;
 
-                    item_total_cost.setText(String.format("Ksh. %d", total));
+                    DecimalFormat formatter = new DecimalFormat("#,###,###");
+                    String formattedString = formatter.format(total);
+
+                    item_total_cost.setText(String.format("%s %s", formattedString, SCurrency));
                 }
             }
         });

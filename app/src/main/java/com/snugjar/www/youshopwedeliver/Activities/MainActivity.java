@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ImageView settings;
     TextView user_location, supermarkets, orders, about, help, feedback, share_app, cart, feed;
     String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone,
-            SDeliveryPrice, SPickupPrice, SCurrency;
+            SDeliveryPrice, SPickupPrice, SCurrency, SPricePerKilometre;
     Dialog location_dialog, loading_dialog, profile_dialog, play_services_dialog, cannot_use_dialog;
     GoogleApiClient mGoogleApiClient;
     Location mLocation;
@@ -1107,9 +1107,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 SDeliveryPrice = item.getString("delivery_price");
                 SPickupPrice = item.getString("pickup_price");
                 SCurrency = item.getString("currency");
+                SPricePerKilometre = item.getString("price_per_kilometre");
 
-                Toast toast = Toast.makeText(MainActivity.this, SDeliveryPrice + SPickupPrice + SCurrency, Toast.LENGTH_LONG);
-                toast.show();
+                /*Toast toast = Toast.makeText(MainActivity.this, SDeliveryPrice + SPickupPrice + SCurrency, Toast.LENGTH_LONG);
+                toast.show();*/
 
                 updateSharedPreferences();
 
@@ -1135,6 +1136,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         editor.putString(Constants.DELIVERY_PRICE, SDeliveryPrice);
         editor.putString(Constants.PICKUP_PRICE, SPickupPrice);
         editor.putString(Constants.CURRENCY, SCurrency);
+        editor.putString(Constants.PRICE_PER_KILOMETRE, SPricePerKilometre);
 
         editor.apply();
 

@@ -55,8 +55,8 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
     ConnectivityManager cManager;
     NetworkInfo nInfo;
     String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription,
-            SSupermarketRating, SpersonID, SCountry, SServerTime, duration, distance,OLatitude, OLongitude, SLocation,
-            SBranchSelected, BLatitude, BLongitude;
+            SSupermarketRating, SpersonID, SCountry, SServerTime, duration, distance, OLatitude, OLongitude, SLocation,
+            SBranchSelected, BLatitude, BLongitude, SDeliveryPrice, SPickupPrice, SCurrency, SPricePerKilometre;
     GoogleApiClient mGoogleApiClient;
     Location mLocation;
     private LocationRequest mLocationRequest;
@@ -304,6 +304,10 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SCountry = sharedPreferences.getString(Constants.COUNTRY, "N/A");
         SpersonID = sharedPreferences.getString(Constants.PERSON_ID, "N/A");
+        SDeliveryPrice = sharedPreferences.getString(Constants.DELIVERY_PRICE, "N/A");
+        SPickupPrice = sharedPreferences.getString(Constants.PICKUP_PRICE, "N/A");
+        SCurrency = sharedPreferences.getString(Constants.CURRENCY, "N/A");
+        SPricePerKilometre = sharedPreferences.getString(Constants.PRICE_PER_KILOMETRE, "N/A");
     }
 
     private void showLocationDialog() {
@@ -415,13 +419,13 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
             if (double_distance > 10) {
                 //user has passed the threshold KMs of 10KMs
                 //charge 20KES per KM after the 10KMs
-                double_distance = double_distance * 20;//get price of distance over threshold
+                double_distance = double_distance * Integer.parseInt(SPricePerKilometre);//get price of distance over threshold
                 Long L = Math.round(double_distance);
                 int i = L.intValue();
                 //int ei = L.intValue()/2;
                 //calculated price of normal deliveries
                 dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
-                        i, getString(R.string.kenya_shillings)));
+                        i, SCurrency));
 
                 finalDeliveryCost = i;
 
@@ -432,10 +436,10 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
                 int ei = 100;
                 //calculated price of normal deliveries
                 dialog_delivery_cost.setText(String.format("%s %s %s", getString(R.string.delivery_cost),
-                        i, getString(R.string.kenya_shillings)));
+                        i, SCurrency));
                 //calculated price of essentials deliveries
                 dialog_essentials_cost.setText(String.format("%s %s %s", getString(R.string.e_delivery_cost),
-                        ei, getString(R.string.kenya_shillings)));
+                        ei, SCurrency));
 
                 finalDeliveryCost = i;
                 finalEssentialCost = ei;
@@ -730,7 +734,7 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
                 if (response.equals("Successful")) {
                     goToShoppingActivity();
                 } else {
-                   goToShoppingActivity();
+                    goToShoppingActivity();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -742,12 +746,12 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
         //go to next activity
         //pass data needed to next activity
         Intent intent = new Intent(BranchesActivity.this, ShoppingActivity.class);
-        intent.putExtra("id",SSupermarketID);
-        intent.putExtra("name",SSupermarketName);
-        intent.putExtra("image",SSupermarketImage);
-        intent.putExtra("slogan",SSupermarketSlogan);
-        intent.putExtra("description",SSupermarketDescription);
-        intent.putExtra("rating",SSupermarketRating);
+        intent.putExtra("id", SSupermarketID);
+        intent.putExtra("name", SSupermarketName);
+        intent.putExtra("image", SSupermarketImage);
+        intent.putExtra("slogan", SSupermarketSlogan);
+        intent.putExtra("description", SSupermarketDescription);
+        intent.putExtra("rating", SSupermarketRating);
         startActivity(intent);
     }
 

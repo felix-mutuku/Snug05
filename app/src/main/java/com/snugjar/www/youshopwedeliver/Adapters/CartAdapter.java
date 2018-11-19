@@ -2,6 +2,7 @@ package com.snugjar.www.youshopwedeliver.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> {
 
     private JSONArray dataArray;
-    String Image, availability, Sname;
+    String Image, availability, Sname, SCurrency;
     private static LayoutInflater inflater = null;
     Activity activity;
 
@@ -30,9 +33,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             this.dataArray = jsonArray;
             activity = a;
             inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            getCurrencyNPrices();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getCurrencyNPrices() {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        //SDeliveryPrice = sharedPreferences.getString(Constants.DELIVERY_PRICE, "N/A");
+        //SPickupPrice = sharedPreferences.getString(Constants.PICKUP_PRICE, "N/A");
+        SCurrency = sharedPreferences.getString(Constants.CURRENCY, "N/A");
+        //SPricePerKilometre = sharedPreferences.getString(Constants.PRICE_PER_KILOMETRE, "N/A");
     }
 
     @Override
@@ -72,7 +84,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
             holder.product_name.setText(jsonObject.getString("item_name"));
             holder.product_quantity.setText(String.format("quantity: %s", jsonObject.getString("quantity")));
-            holder.product_price.setText(String.format("total: %s", jsonObject.getString("price")));
+
+            int itemTotal = Integer.parseInt(jsonObject.getString("price"));
+            DecimalFormat formatter = new DecimalFormat("#,###,###");
+            String formattedString = formatter.format(itemTotal);
+
+            holder.product_price.setText(String.format("total: %s %s", formattedString, SCurrency));
 
             //implement setOnClickListener event on item view.
             holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -39,6 +39,8 @@ public class Constants {
     public static final String DELIVERY_PRICE = "trolleyhut_delivery_price";
     public static final String PICKUP_PRICE = "trolleyhut_pickup_price";
     public static final String CURRENCY = "trolleyhut_currency";
+    public static final String PRICE_PER_KILOMETRE = "trolleyhut_price_per_kilometre";
+    public static final String CART_ITEMS_NUMBER = "trolleyhut_cart_items_number";
 
     public static final String ORDER_ID = "trolleyhut_order_id";
 }
