@@ -62,6 +62,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
     Uri Sphoto;
     Dialog dialog;
     public boolean isLoggedin;
+    TextView terms_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
         signInButton = findViewById(R.id.sign_in_button);
         loading = findViewById(R.id.loading);
+        terms_txt = findViewById(R.id.terms_txt);
 
         checkLoginStatus();
 
@@ -97,6 +99,19 @@ public class LoginSignUpActivity extends AppCompatActivity {
             }
         });
 
+        terms_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to activity to show terms and conditions
+                goToTerms();
+            }
+        });
+
+    }
+
+    private void goToTerms() {
+        Intent intent = new Intent(LoginSignUpActivity.this, TermsActivity.class);
+        startActivity(intent);
     }
 
     private void signIn() {

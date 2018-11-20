@@ -3,7 +3,7 @@ package com.snugjar.www.youshopwedeliver.Connectors;
 public class Constants {
     //URLs to connect to server and databases
     public static final String BASE_URL_LOGIC = "https://www.snugjar.com/Apps/TrolleyHut/Android/Logic/";
-    public static final String BASE_URL_SUPERMARKET_IMAGE = "https://www.snugjar.com/Apps/TrolleyHut/SupermarketPics/";
+    public static final String BASE_URL_TERMS= "https://www.snugjar.com/Apps/TrolleyHut/Terms/";
     public static final String BASE_URL_SUPERMARKET_LOGOS = "https://www.snugjar.com/Apps/TrolleyHut/SupermarketLogos/";
     public static final String BASE_URL_SUPERMARKET_ADS = "https://www.snugjar.com/Apps/TrolleyHut/SupermarketAds/";
     public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.snugjar.www.youshopwedeliver";

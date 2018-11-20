@@ -232,4 +232,9 @@
     <string name="delivery_location">Delivery Location</string>
     <string name="payment_method">Payment Method</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="terms_and_conditions">Terms &amp; Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
 </resources>
