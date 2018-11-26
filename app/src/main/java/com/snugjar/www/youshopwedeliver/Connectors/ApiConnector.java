@@ -1022,4 +1022,39 @@ public class ApiConnector {
         return response;
 
     }
+
+    //used to update user information in the database when a user changes it
+    public String DeleteUser(String SpersonID) {
+        StringBuilder result = new StringBuilder();
+        HttpsURLConnection urlConnection = null;
+        String response = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "deleteUser.php?personID=" + SpersonID);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            response = String.valueOf(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return response;
+
+    }
 }

@@ -30,8 +30,8 @@
             android:id="@+id/close_dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:padding="15dp"
             app:srcCompat="@drawable/ic_cancel_black_24dp" />
 
@@ -87,12 +87,12 @@
             android:layout_margin="10dp"
             android:background="@drawable/bg_button3"
             android:drawableStart="@drawable/ic_person_pin_circle_black_24dp"
+            android:focusable="false"
             android:fontFamily="@font/gothamrounded"
             android:gravity="center"
-            android:focusable="false"
-            android:text="ke"
             android:hint="@string/input_country"
             android:inputType="none"
+            android:text="ke"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="14sp" />
@@ -113,17 +113,50 @@
             android:textColorHint="@color/black"
             android:textSize="14sp" />
 
+        <LinearLayout
+            android:id="@+id/check_linear"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/personPhone"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/terms_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:buttonTint="@color/black"
+                android:fontFamily="@font/gothamrounded"
+                android:lines="1"
+                android:text="@string/half_terms"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/terms_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="3dp"
+                android:fontFamily="@font/gothamrounded"
+                android:lines="1"
+                android:text="@string/terms_text"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/loading_dialog"
             style="@style/AVLoadingIndicatorView.Large"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_below="@+id/personPhone"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_below="@+id/check_linear"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:visibility="gone"
             app:indicatorColor="@color/colorPrimaryDark"
             app:indicatorName="PacmanIndicator" />
@@ -132,15 +165,15 @@
             android:id="@+id/confirm_details"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_below="@+id/personPhone"
-            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/check_linear"
             android:layout_marginLeft="10dp"
-            android:textAllCaps="false"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/bg_button4"
             android:fontFamily="@font/gothamrounded"
             android:text="@string/confirm_details"
+            android:textAllCaps="false"
             android:textSize="16sp" />
     </RelativeLayout>
 </ScrollView>

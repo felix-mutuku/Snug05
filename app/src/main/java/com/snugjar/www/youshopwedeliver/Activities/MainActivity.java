@@ -31,6 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     TextView user_location, supermarkets, orders, about, help, feedback, share_app, cart, feed;
     String SpersonID, SImage, SName, SEmail, SIMEI, SUserType, SCountry, SPhone, SJoinDate, CSPhone,
             SDeliveryPrice, SPickupPrice, SCurrency, SPricePerKilometre;
-    Dialog location_dialog, loading_dialog, profile_dialog, play_services_dialog, cannot_use_dialog;
+    Dialog location_dialog, loading_dialog, profile_dialog, play_services_dialog, cannot_use_dialog, are_you_sure_dialog;
     GoogleApiClient mGoogleApiClient;
     Location mLocation;
     private LocationRequest mLocationRequest;
@@ -589,8 +590,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         final EditText personPhone = profile_dialog.findViewById(R.id.personPhone);
         final AVLoadingIndicatorView loading_dialog = profile_dialog.findViewById(R.id.loading_dialog);
         final Button save_details = profile_dialog.findViewById(R.id.save_details);
+        ImageView delete_account = profile_dialog.findViewById(R.id.delete_account);
+        Button logout = profile_dialog.findViewById(R.id.logout);
+        final RelativeLayout relative_save = profile_dialog.findViewById(R.id.relative_save);
 
-        save_details.setVisibility(View.GONE);
+        relative_save.setVisibility(View.GONE);
 
         //load profile picture and details
         Glide
@@ -632,10 +636,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 //check for changes in phone number
                 CSPhone = personPhone.getText().toString();
                 if (!CSPhone.equals(SPhone)) {
-                    save_details.setVisibility(View.VISIBLE);
+                    relative_save.setVisibility(View.VISIBLE);
                 } else {
-                    save_details.setVisibility(View.GONE);
+                    relative_save.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        delete_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete user account from database
+                deleteUserAccount();
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //logout user and destroy current login session
+                LogOutAreYouSure();
             }
         });
 
@@ -777,6 +797,157 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
 
         profile_dialog.show();
+    }
+
+    private void LogOutAreYouSure() {
+        //as user whether they are sure they want to logout
+        are_you_sure_dialog = new Dialog(MainActivity.this);
+        are_you_sure_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        are_you_sure_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        are_you_sure_dialog.setCancelable(false);
+        are_you_sure_dialog.setContentView(R.layout.dialog_are_you_sure);
+
+        ImageView dialog_image = are_you_sure_dialog.findViewById(R.id.dialog_image);
+        TextView dialog_text = are_you_sure_dialog.findViewById(R.id.dialog_text);
+        Button button_no = are_you_sure_dialog.findViewById(R.id.button_no);
+        Button button_yes = are_you_sure_dialog.findViewById(R.id.button_yes);
+
+        //load appropriate image
+        Glide
+                .with(MainActivity.this)
+                .load(R.drawable.ic_eject_black_24dp)
+                .error(R.drawable.ic_eject_black_24dp)
+                .crossFade()
+                .into(dialog_image);
+
+        dialog_text.setText(R.string.logout_warning);
+
+        button_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //log current user out
+                logOutUser();
+            }
+        });
+
+        button_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dismiss dialog like nothing happened
+                are_you_sure_dialog.dismiss();
+            }
+        });
+
+        are_you_sure_dialog.show(); //don't forget to dismiss the dialog when done
+    }
+
+    private void logOutUser() {
+        //destroy current login session from the app
+        SharedPreferences getSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences.Editor e = getSharedPreferences.edit();
+        e.putBoolean("isLoggedin", false);
+        e.putBoolean("firstStart", true);
+        e.apply();
+
+        //and take user to splash screen
+        Intent i = new Intent(MainActivity.this, SplashScreenActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void deleteUserAccount() {
+        //ask user whether they are sure they want to delete their account
+        are_you_sure_dialog = new Dialog(MainActivity.this);
+        are_you_sure_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        are_you_sure_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        are_you_sure_dialog.setCancelable(false);
+        are_you_sure_dialog.setContentView(R.layout.dialog_are_you_sure);
+
+        ImageView dialog_image = are_you_sure_dialog.findViewById(R.id.dialog_image);
+        TextView dialog_text = are_you_sure_dialog.findViewById(R.id.dialog_text);
+        Button button_no = are_you_sure_dialog.findViewById(R.id.button_no);
+        Button button_yes = are_you_sure_dialog.findViewById(R.id.button_yes);
+
+        //load appropriate image
+        Glide
+                .with(MainActivity.this)
+                .load(R.drawable.ic_delete_forever_black_24dp)
+                .error(R.drawable.ic_delete_forever_black_24dp)
+                .crossFade()
+                .into(dialog_image);
+
+        dialog_text.setText(R.string.delete_account_warning);
+
+        button_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete the account from database
+                //dismiss dialog and show loading
+                profile_dialog.dismiss();
+                loading_dialog.show();
+                new deleteUser().execute(new ApiConnector());
+            }
+        });
+
+        button_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //dismiss dialog like nothing happened
+                are_you_sure_dialog.dismiss();
+            }
+        });
+
+        are_you_sure_dialog.show(); //don't forget to dismiss the dialog when done
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class deleteUser extends AsyncTask<ApiConnector, Long, String> {
+        @Override
+        protected String doInBackground(ApiConnector... params) {
+            //it is executed on Background thread
+            //SCountry = SCountry.toUpperCase();//make the country code all caps
+            return params[0].DeleteUser(SpersonID);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String response) {
+            try {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+
+                if (response.equals("Successful")) {
+                    Toast toast = Toast.makeText(MainActivity.this, "Your profile has been deleted :(", Toast.LENGTH_LONG);
+                    View toastView = toast.getView(); //This'll return the default View of the Toast.
+                    TextView toastMessage = toastView.findViewById(android.R.id.message);
+                    toastMessage.setTextSize(12);
+                    toastMessage.setTextColor(getResources().getColor(R.color.white));
+                    toastMessage.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+                    toastMessage.setGravity(Gravity.CENTER);
+                    toastMessage.setCompoundDrawablePadding(10);
+                    toastView.setBackground(getResources().getDrawable(R.drawable.bg_button));
+                    toast.show();
+
+                    logOutUser();
+                } else {
+                    builder.setMessage("An error occurred :(\nTry again?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    new deleteUser().execute(new ApiConnector());
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                    loading_dialog.dismiss();
+                                }
+                            });
+                    builder.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void showToastEditInGoogle() {

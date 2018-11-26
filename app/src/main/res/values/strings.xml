@@ -236,5 +236,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="terms_and_conditions">Terms &amp; Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="half_terms">I have read and understood the</string>
+    <string name="terms_text"><b>Ts &amp; Cs</b></string>
+    <string name="logout">Log me out</string>
+    <string name="delete_account_warning">Are you sure you want to delete your account :( ?\n\nDeleted accounts cannot be recovered.\nHowever some data may still be available throughout the app such as messages, comments and ratings.</string>
+    <string name="logout_warning">Are you sure you want to logout of Trolleyhut ?\n\nYou can come back anytime and continue where you left off ;)</string>
 
 </resources>

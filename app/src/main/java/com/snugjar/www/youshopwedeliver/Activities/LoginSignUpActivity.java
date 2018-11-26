@@ -26,11 +26,14 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -483,6 +486,11 @@ public class LoginSignUpActivity extends AppCompatActivity {
         final EditText personPhone = dialog.findViewById(R.id.personPhone);
         final Button confirm_details = dialog.findViewById(R.id.confirm_details);
         final AVLoadingIndicatorView loading_dialog = dialog.findViewById(R.id.loading_dialog);
+        final CheckBox terms_checkbox = dialog.findViewById(R.id.terms_checkbox);
+        TextView terms_text = dialog.findViewById(R.id.terms_text);
+
+        //make confirm button invisible until user confirms the terms and conditions
+        confirm_details.setVisibility(View.GONE);
 
         //making sure numbers entered have "254" in them
         personPhone.addTextChangedListener(new TextWatcher() {
@@ -522,8 +530,32 @@ public class LoginSignUpActivity extends AppCompatActivity {
         personCountry.setText(Scountry);
 
         if (!Sphone.equals("null")) {
+            Sphone = Sphone.replaceAll("\\+","");
             personPhone.setText(Sphone);
         }
+
+        terms_checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //when user accepts the terms and conditions
+                if(terms_checkbox.isChecked()){
+                    //user has accepted the terms and conditions
+                    confirm_details.setVisibility(View.VISIBLE);
+                }else{
+                    //user hasn't accepted the terms and conditions
+                    confirm_details.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        terms_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //go to terms and conditions activity
+                Intent intent = new Intent(LoginSignUpActivity.this, TermsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         confirm_details.setOnClickListener(new View.OnClickListener() {
             //checking if user mobile number already exists in the database
@@ -532,6 +564,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 @Override
                 protected String doInBackground(ApiConnector... params) {
                     //it is executed on Background thread
+                    //Log.e("NUMBER >>>>>>>>>>", Sphone);
                     return params[0].CheckUserMobile(Sphone);
                 }
 
@@ -556,6 +589,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                             loading_dialog.setVisibility(View.GONE);
                             confirm_details.setVisibility(View.VISIBLE);
                             close_dialog.setVisibility(View.VISIBLE);
+                            terms_checkbox.setEnabled(true);
                         } else {
                             //number entered isn't in the database, proceed to adding user to Database
                             //confirm all the details entered by the user and send data to database
@@ -584,6 +618,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                         loading_dialog.setVisibility(View.GONE);
                                         confirm_details.setVisibility(View.VISIBLE);
                                         close_dialog.setVisibility(View.VISIBLE);
+                                        terms_checkbox.setEnabled(true);
                                     }
                                 } else {
                                     //number too short
@@ -592,6 +627,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                     loading_dialog.setVisibility(View.GONE);
                                     confirm_details.setVisibility(View.VISIBLE);
                                     close_dialog.setVisibility(View.VISIBLE);
+                                    terms_checkbox.setEnabled(true);
                                 }
                             } else {
                                 //number is empty
@@ -600,6 +636,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                 loading_dialog.setVisibility(View.GONE);
                                 confirm_details.setVisibility(View.VISIBLE);
                                 close_dialog.setVisibility(View.VISIBLE);
+                                terms_checkbox.setEnabled(true);
                             }
                         }
 
@@ -615,6 +652,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 loading_dialog.setVisibility(View.VISIBLE);
                 confirm_details.setVisibility(View.INVISIBLE);
                 close_dialog.setVisibility(View.INVISIBLE);
+                terms_checkbox.setEnabled(false);
                 new CheckUserMobile().execute(new ApiConnector());
             }
         });
