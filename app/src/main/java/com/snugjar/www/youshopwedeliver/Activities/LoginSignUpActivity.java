@@ -565,6 +565,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                 protected String doInBackground(ApiConnector... params) {
                     //it is executed on Background thread
                     //Log.e("NUMBER >>>>>>>>>>", Sphone);
+                    Sphone = personPhone.getText().toString();
                     return params[0].CheckUserMobile(Sphone);
                 }
 

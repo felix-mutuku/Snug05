@@ -38,7 +38,7 @@ import java.text.DecimalFormat;
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
     private JSONArray dataArray;
-    String supermarketID, supermarketName, orderID, personID, deviceIMEI, SCurrency;
+    String supermarketID, supermarketName, orderID, personID, deviceIMEI, SCurrency, perUnit;
     private static LayoutInflater inflater = null;
     Activity activity;
     private RecyclerView recycler_View;
@@ -178,6 +178,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         product_name.setText(productName);//set the name
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String formattedString = formatter.format(d_price);
+        //for adding current price to the database
+        perUnit = formattedString;
         item_price.setText(String.format("%s %s", formattedString, SCurrency));//set the price in human readable format
         item_count.setText("1");//set the count of the items which is "1" by default
 
@@ -200,16 +202,20 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
                 count = Integer.parseInt(itemCount);
 
-                count = count + 1;
+                if (count < 50) {
+                    //cannot order more than 50 units of an item
+                    count = count + 1;
 
-                item_count.setText(String.valueOf(count));
+                    item_count.setText(String.valueOf(count));
 
-                total = d_price * count;
+                    total = d_price * count;
 
-                DecimalFormat formatter = new DecimalFormat("#,###,###");
-                String formattedString = formatter.format(total);
+                    DecimalFormat formatter = new DecimalFormat("#,###,###");
+                    String formattedString = formatter.format(total);
 
-                item_total_cost.setText(String.format("%s %s", formattedString, SCurrency));
+                    item_total_cost.setText(String.format("%s %s", formattedString, SCurrency));
+                }
+
             }
         });
 
@@ -222,6 +228,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 count = Integer.parseInt(itemCount);
 
                 if (count != 1) {
+                    //cannot order less than zero items
                     count = count - 1;
 
                     item_count.setText(String.valueOf(count));
@@ -285,7 +292,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                     total = d_price * Integer.parseInt(quantity);
 
                     //it is executed on Background thread
-                    return params[0].AddToCart(orderID, product, personID, quantity, total, deviceIMEI, productImage);
+                    return params[0].AddToCart(orderID, product, personID, quantity, perUnit, total, deviceIMEI, productImage);
                 }
 
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -356,6 +363,5 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         toastView.setBackground(activity.getResources().getDrawable(R.drawable.bg_button));
         toast.show();
     }
-
 
 }

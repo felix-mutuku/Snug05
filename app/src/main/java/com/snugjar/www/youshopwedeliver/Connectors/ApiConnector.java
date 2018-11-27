@@ -778,7 +778,7 @@ public class ApiConnector {
 
     }
 
-    public String AddToCart(String orderID, String productName, String personID, String count, int total, String deviceIMEI, String image) {
+    public String AddToCart(String orderID, String productName, String personID, String count, String perUnit, int total, String deviceIMEI, String image) {
         StringBuilder result = new StringBuilder();
         HttpsURLConnection urlConnection = null;
         String response = null;
@@ -788,6 +788,7 @@ public class ApiConnector {
                     "&productName=" + productName +
                     "&personID=" + personID +
                     "&count=" + count +
+                    "&perUnit=" + perUnit +
                     "&total=" + total +
                     "&deviceIMEI=" + deviceIMEI +
                     "&image=" + image);
@@ -946,7 +947,7 @@ public class ApiConnector {
     }
 
     //used to get specific details about the user when requested in the profile
-    public JSONArray GetPricesNCurrency (String country) {
+    public JSONArray GetPricesNCurrency(String country) {
         StringBuilder result = new StringBuilder();
         JSONArray jsonArray = null;
         HttpsURLConnection urlConnection = null;
@@ -1031,6 +1032,46 @@ public class ApiConnector {
 
         try {
             URL url = new URL(Constants.BASE_URL_LOGIC + "deleteUser.php?personID=" + SpersonID);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+
+            in.close();
+            reader.close();
+
+            response = String.valueOf(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+
+        return response;
+
+    }
+
+    public String UpdateCart(String personID, String deviceIMEI, String orderID, String productName, String quantityNum, String total) {
+        StringBuilder result = new StringBuilder();
+        HttpsURLConnection urlConnection = null;
+        String response = null;
+
+        try {
+            URL url = new URL(Constants.BASE_URL_LOGIC + "updateCart.php?personID=" + personID +
+                    "&deviceIMEI=" + deviceIMEI +
+                    "&orderID=" + orderID +
+                    "&productName=" + productName +
+                    "&quantityNum=" + quantityNum +
+                    "&total=" + total);
+
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());

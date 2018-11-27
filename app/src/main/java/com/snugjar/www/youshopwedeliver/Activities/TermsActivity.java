@@ -15,20 +15,19 @@ import android.widget.TextView;
 import com.snugjar.www.youshopwedeliver.Connectors.Constants;
 import com.snugjar.www.youshopwedeliver.R;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class TermsActivity extends AppCompatActivity {
     TextView back, terms_txt, please_wait, terms_and_conditions, privacy_policy;
     LinearLayout linear_available;
     Dialog loading_dialog;
+    String SUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,13 +86,15 @@ public class TermsActivity extends AppCompatActivity {
     private void initializeTermsAndConditions() {
         terms_and_conditions.setBackgroundResource(R.drawable.bg_button4);
         privacy_policy.setBackgroundResource(R.drawable.bg_button5);
-        new GetStringFromUrl().execute(Constants.BASE_URL_TERMS + "terms.txt");
+        SUrl = Constants.BASE_URL_TERMS + "terms.txt";
+        new GetStringFromUrl().execute();
     }
 
     private void initializePrivacyPolicy() {
         terms_and_conditions.setBackgroundResource(R.drawable.bg_button5);
         privacy_policy.setBackgroundResource(R.drawable.bg_button4);
-        new GetStringFromUrl().execute(Constants.BASE_URL_TERMS + "privacy.txt");
+        SUrl = Constants.BASE_URL_TERMS + "privacy.txt";
+        new GetStringFromUrl().execute();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -102,20 +103,19 @@ public class TermsActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             showLoadingDialog();
-            // show progress dialog when downloading
+            // how progress dialog when downloading
             //dialog = ProgressDialog.show(PrivacyActivity.this, null, "Please Wait...");
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(params[0]);
-                HttpResponse response = httpClient.execute(httpGet);
-                HttpEntity entity = response.getEntity();
-                BufferedHttpEntity buf = new BufferedHttpEntity(entity);
-                InputStream is = buf.getContent();
-                BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                URL url = new URL(SUrl);
+                HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader r = new BufferedReader(new InputStreamReader(in));
+
                 StringBuilder total = new StringBuilder();
                 String line;
                 while ((line = r.readLine()) != null) {
