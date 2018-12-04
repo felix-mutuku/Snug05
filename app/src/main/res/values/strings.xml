@@ -1,30 +1,30 @@
 <resources>
-    <string name="app_name">Trolleyhut</string>
+    <string name="app_name">Order View Review</string>
     <string name="retry">Retry</string>
     <string name="check_your_internet">Please check your internet connection.\nAnd try again</string>
-    <string name="welcome_to_shopdrop">Welcome to Shopdrop</string>
-    <string name="do_all_your_home_shopping">Do all your home shopping in one place conveniently.</string>
-    <string name="all_shopping_done">All your shopping list items are perfectly hand picked by our staff at the store</string>
+    <string name="welcome_to_shopdrop">Welcome to Order View Review</string>
+    <string name="do_all_your_home_shopping">Do all your food runs in one place conveniently.</string>
+    <string name="all_shopping_done">All your food items are perfectly hand picked and dropped to you by our staff</string>
     <string name="all_shopping_delivered">Items are packaged and shipped to you within the shortest time possible</string>
-    <string name="welcome_to_shopdrop_enjoy">Welcome to Shopdrop\nHappy shopping :)</string>
+    <string name="welcome_to_shopdrop_enjoy">Welcome to Order View Review\nHappy munchies :)</string>
     <string name="terms">By signing in you agree to our <b>terms and conditions</b></string>
     <string name="no_passwords">It\'s easy, no need for passwords</string>
     <string name="input_phone_number">Your Mobile Number</string>
     <string name="input_email">Your Email Address</string>
     <string name="your_name">Your Name</string>
     <string name="confirm_details">Confirm Details</string>
-    <string name="you_re_almost_done">Confirm details and start shopping</string>
+    <string name="you_re_almost_done">Confirm details and start dinning</string>
     <string name="create_google_account">You have to create a <b>Google Account</b> to login</string>
     <string name="login_with_google">Login with Google</string>
     <string name="invalid_number">Phone number is invalid !</string>
     <string name="input_country">Your Current Country</string>
-    <string name="all_supermarkets_in_one_place">Find all your favorite supermarkets in one place</string>
+    <string name="all_supermarkets_in_one_place">Find all your favorite food joints in one place</string>
     <string name="coming_soon">Soon</string>
-    <string name="slogan">You shop, We deliver</string>
+    <string name="slogan">Order View Review</string>
     <string name="what_is_the_ad_about">What is the ad about ?</string>
     <string name="ad_headline">This is the headline for the AD</string>
     <string name="ad_offer">UpTo 10% Off</string>
-    <string name="supermarkets">Supermarkets</string>
+    <string name="supermarkets">Food joints</string>
     <string name="orders">Orders</string>
     <string name="about">About</string>
     <string name="help">Help</string>
@@ -40,7 +40,7 @@
     <string name="home">home</string>
     <string name="sponsored">Sponsored</string>
     <string name="soon_available">will soon be available</string>
-    <string name="select_branch">Select branch to shop from</string>
+    <string name="select_branch">Select branch to order food from</string>
     <string name="closed">Closed</string>
     <string name="getting_branches">Loading Branches…</string>
     <string name="open">Open</string>
@@ -199,13 +199,13 @@
     <string name="multiplication_sign">X</string>
     <string name="branches_info">The nearer you are to the branch of the supermarket, the cheaper the delivery cost and your convenience.</string>
     <string name="got_it">Got it</string>
-    <string name="cart">Your cart</string>
+    <string name="cart">Your food cart</string>
     <string name="feed">News feed</string>
-    <string name="empty_cart">Your cart is currently empty :(</string>
-    <string name="select_delivery_method">Please select how you want to receive your goods</string>
-    <string name="deliver_to_doorstep">I want it delivered t my location</string>
+    <string name="empty_cart">Your food cart is currently empty :(</string>
+    <string name="select_delivery_method">Please select how you want to receive your food</string>
+    <string name="deliver_to_doorstep">I want it delivered to my location</string>
     <string name="pick_up_from_branch">I want to pick it up myself from the store</string>
-    <string name="are_you_sure_you_want_to_checkout">Are you sure you want to Chechout ?</string>
+    <string name="are_you_sure_you_want_to_checkout">Are you sure you want to Checkout ?</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="now_location">Your current location</string>
@@ -240,7 +240,7 @@
     <string name="terms_text"><b>Ts &amp; Cs</b></string>
     <string name="logout">Log me out</string>
     <string name="delete_account_warning">Are you sure you want to delete your account :( ?\n\nDeleted accounts cannot be recovered.\nHowever some data may still be available throughout the app such as messages, comments and ratings.</string>
-    <string name="logout_warning">Are you sure you want to logout of Trolleyhut ?\n\nYou can come back anytime and continue where you left off ;)</string>
-    <string name="update_cart">Update cart</string>
+    <string name="logout_warning">Are you sure you want to logout of Order View Review ?\n\nYou can come back anytime and continue where you left off ;)</string>
+    <string name="update_cart">Update food cart</string>
 
 </resources>

@@ -12,7 +12,7 @@ android {
     compileSdkVersion 27
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId "com.snugjar.www.youshopwedeliver"
+        applicationId "com.snugjar.www.orderviewreview"
         minSdkVersion 17
         targetSdkVersion 27
         versionCode 7

@@ -17,7 +17,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:visibility="visible"
-        app:indicatorColor="@color/colorPrimaryDark"
+        app:indicatorColor="@color/colorAccent"
         app:indicatorName="PacmanIndicator" />
 
     <TextView

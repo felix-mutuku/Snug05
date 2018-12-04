@@ -113,7 +113,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:orientation="vertical"
-            tools:context=".Activities.SupermarketsActivity">
+            tools:context="com.snugjar.www.orderviewreview.Activities.SupermarketsActivity">
 
             <TextView
                 android:id="@+id/user_location"
@@ -151,7 +151,7 @@
                     android:fontFamily="@font/gothamrounded"
                     android:gravity="center"
                     android:text="@string/supermarkets"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
@@ -167,7 +167,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/cart"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -188,7 +188,7 @@
                     android:fontFamily="@font/gothamrounded"
                     android:gravity="center"
                     android:text="@string/feed"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
@@ -204,7 +204,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/orders"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -226,7 +226,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/about"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
@@ -242,7 +242,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/help"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -264,7 +264,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/feedback"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
@@ -280,7 +280,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/share_app"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -293,7 +293,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:text="@string/sponsored"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
 
             <android.support.v7.widget.CardView

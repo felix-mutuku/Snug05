@@ -23,8 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="127" />
-                                                <entry key="trimmed" value="true" />
+                                                <entry key="scalingPercent" value="50" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -36,7 +35,7 @@
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="ffffff" />
-                                      <entry key="foregroundImage" value="C:\Users\fngumu\Desktop\Logos\logo1.png" />
+                                      <entry key="foregroundImage" value="C:\Users\fngumu\Desktop\Logos\order_view_review_logo.png" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                     </map>
                                   </option>

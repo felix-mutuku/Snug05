@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/closed"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/red"
             android:textSize="12sp"
             android:textStyle="bold"
             app:fontFamily="@font/gothamrounded" />

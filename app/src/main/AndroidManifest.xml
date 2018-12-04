@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.snugjar.www.youshopwedeliver">
+    package="com.snugjar.www.orderviewreview">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.SplashScreenActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
@@ -32,50 +32,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.InternetActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.InternetActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.IntroActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.IntroActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.LoginSignUpActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.LoginSignUpActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SupermarketsActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.SupermarketsActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.ShoppingActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.ShoppingActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SearchActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.SearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.CategoriesActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.CategoriesActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.BranchesActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.BranchesActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.CartActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.CartActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.CheckoutActivity"
+            android:name="com.snugjar.www.orderviewreview.Activities.CheckoutActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activities.TermsActivity"></activity>
+        <activity android:name="com.snugjar.www.orderviewreview.Activities.TermsActivity"></activity>
     </application>
 
 </manifest>

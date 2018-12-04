@@ -58,7 +58,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_button4"
+            android:background="@drawable/bg_button"
             android:fontFamily="@font/gothamrounded"
             android:text="@string/enable"
             android:textAllCaps="false"

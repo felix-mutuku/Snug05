@@ -134,7 +134,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".Activities.SupermarketsActivity">
+        tools:context="com.snugjar.www.orderviewreview.Activities.SupermarketsActivity">
 
         <TextView
             android:id="@+id/categories_text"

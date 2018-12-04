@@ -51,7 +51,7 @@
             android:gravity="center"
             android:lineSpacingExtra="10dp"
             android:padding="5dp"
-            android:text="About Supermarket"
+            android:text="About Food Joint"
             android:textColor="@color/black"
             android:textSize="16sp" />
     </android.support.v4.widget.NestedScrollView>

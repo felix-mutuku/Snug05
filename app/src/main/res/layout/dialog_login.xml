@@ -22,7 +22,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/you_re_almost_done"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/black"
             android:textSize="14sp"
             app:fontFamily="@font/gothamrounded" />
 
@@ -143,7 +143,7 @@
                 android:fontFamily="@font/gothamrounded"
                 android:lines="1"
                 android:text="@string/terms_text"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorPrimary" />
         </LinearLayout>
 
         <com.wang.avi.AVLoadingIndicatorView
@@ -170,7 +170,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_button4"
+            android:background="@drawable/bg_button"
             android:fontFamily="@font/gothamrounded"
             android:text="@string/confirm_details"
             android:textAllCaps="false"
