@@ -13,10 +13,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -26,9 +29,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.snugjar.www.orderviewreview.Adapters.ProductsAdapter;
 import com.snugjar.www.orderviewreview.Connectors.ApiConnector;
 import com.snugjar.www.orderviewreview.Connectors.Constants;
+import com.snugjar.www.orderviewreview.Fragments.CategoriesFragment;
 import com.snugjar.www.orderviewreview.R;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
@@ -37,13 +40,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShoppingActivity extends AppCompatActivity {
     ConnectivityManager cManager;
     NetworkInfo nInfo;
-    TextView back, supermarket_slogan, offers, baby_kids, beauty_cosmetics, canned_goods, cleaning, cooking_oil,
-            dairy, drinks, food_cupboard, fresh_food, frozen, health_wellness, household, kitchen_dining, office_supplies,
-            sauces, snacks, toiletries;
+    TextView back, supermarket_slogan;
     Dialog loading_dialog, description_dialog, location_dialog, play_services_dialog;
     String SSupermarketID, SSupermarketName, SSupermarketImage, SSupermarketSlogan, SSupermarketDescription,
             SSupermarketRating, SCountry, SpersonID;
@@ -52,6 +54,8 @@ public class ShoppingActivity extends AppCompatActivity {
     CarouselView carouselView;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     RecyclerView recycler_view;
+    TabLayout tabs_layout;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,25 +70,9 @@ public class ShoppingActivity extends AppCompatActivity {
         available = findViewById(R.id.available);
         recycler_view = findViewById(R.id.recycler_view);
         search = findViewById(R.id.search);
-        offers = findViewById(R.id.offers);
-        baby_kids = findViewById(R.id.baby_kids);
-        beauty_cosmetics = findViewById(R.id.beauty_cosmetics);
-        canned_goods = findViewById(R.id.canned_goods);
-        cleaning = findViewById(R.id.cleaning);
-        cooking_oil = findViewById(R.id.cooking_oil);
-        dairy = findViewById(R.id.dairy);
-        drinks = findViewById(R.id.drinks);
-        food_cupboard = findViewById(R.id.food_cupboard);
-        fresh_food = findViewById(R.id.fresh_food);
-        frozen = findViewById(R.id.frozen);
-        health_wellness = findViewById(R.id.health_wellness);
-        household = findViewById(R.id.household);
-        kitchen_dining = findViewById(R.id.kitchen_dining);
-        office_supplies = findViewById(R.id.office_supplies);
-        sauces = findViewById(R.id.sauces);
-        snacks = findViewById(R.id.snacks);
-        toiletries = findViewById(R.id.toiletries);
         cart = findViewById(R.id.cart);
+        viewPager = findViewById(R.id.viewpager);
+        tabs_layout = findViewById(R.id.tabs_layout);
 
         cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         assert cManager != null;
@@ -153,132 +141,6 @@ public class ShoppingActivity extends AppCompatActivity {
                 goToSearch();
             }
         });
-
-        offers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("offers");
-            }
-        });
-
-        baby_kids.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("baby_kids");
-            }
-        });
-
-        beauty_cosmetics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("beauty_cosmetics");
-            }
-        });
-
-        canned_goods.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("canned_goods");
-            }
-        });
-
-        cleaning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("cleaning");
-            }
-        });
-
-        cooking_oil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("cooking_oil");
-            }
-        });
-
-        dairy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("dairy");
-            }
-        });
-
-        drinks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("drinks");
-            }
-        });
-
-        food_cupboard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("food_cupboard");
-            }
-        });
-
-        fresh_food.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("fresh_food");
-            }
-        });
-
-        frozen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("frozen");
-            }
-        });
-
-        health_wellness.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("health_wellness");
-            }
-        });
-
-        household.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("household");
-            }
-        });
-
-        kitchen_dining.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("kitchen_dining");
-            }
-        });
-
-        office_supplies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("office_supplies");
-            }
-        });
-
-        sauces.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("sauces");
-            }
-        });
-
-        snacks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("snacks");
-            }
-        });
-
-        toiletries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCategories("toiletries");
-            }
-        });
     }
 
     private void goToCart() {
@@ -287,7 +149,7 @@ public class ShoppingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToCategories(String category) {
+    /*private void goToCategories(String category) {
         //start categories activity pass category to the intent
         Intent intent = new Intent(ShoppingActivity.this, CategoriesActivity.class);
         intent.putExtra("category_selected", category);
@@ -295,7 +157,7 @@ public class ShoppingActivity extends AppCompatActivity {
         intent.putExtra("supermarketName", SSupermarketName);
         intent.putExtra("country", SCountry);
         startActivity(intent);
-    }
+    }*/
 
     private void goToSearch() {
         //open search activity
@@ -352,9 +214,20 @@ public class ShoppingActivity extends AppCompatActivity {
 
         supermarket_slogan.setText(SSupermarketSlogan);
 
-        new GetSlidingAds().execute(new ApiConnector());
+        new GetSlidingImages().execute(new ApiConnector());
 
-        new GetEssentialProducts().execute(new ApiConnector());
+        categoriesViewPager(viewPager);
+        tabs_layout.setupWithViewPager(viewPager);
+    }
+
+    private void categoriesViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, "popular", loading_dialog), "Popular");
+        adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, "breakfast", loading_dialog), "Breakfast");
+        adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, "meals", loading_dialog), "Meals");
+        adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, "drinks", loading_dialog), "Drinks");
+        adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, "extras", loading_dialog), "Extras");
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -372,10 +245,11 @@ public class ShoppingActivity extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GetSlidingAds extends AsyncTask<ApiConnector, Long, JSONArray> {
+    private class GetSlidingImages extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
-            return params[0].GetSupermarketSlidingAds(SCountry, SSupermarketName);
+            SSupermarketName = SSupermarketName.replaceAll(" ", "+");
+            return params[0].GetFoodJointSlidingImages(SCountry, SSupermarketName);
         }
 
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -384,7 +258,7 @@ public class ShoppingActivity extends AppCompatActivity {
             try {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    SlidingImagesList.add(Constants.BASE_URL_SUPERMARKET_ADS + object.getString("image"));
+                    SlidingImagesList.add(object.getString("image"));
                 }
 
                 setFlippingImage();
@@ -434,7 +308,36 @@ public class ShoppingActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setProductsAdapter(JSONArray jsonArray) {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+    /*public void setProductsAdapter(JSONArray jsonArray) {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recycler_view.setLayoutManager(staggeredGridLayoutManager);
         try {
@@ -450,9 +353,9 @@ public class ShoppingActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    @SuppressLint("StaticFieldLeak")
+    /*@SuppressLint("StaticFieldLeak")
     private class GetEssentialProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
@@ -468,6 +371,6 @@ public class ShoppingActivity extends AppCompatActivity {
         protected void onPostExecute(JSONArray jsonArray) {
             setProductsAdapter(jsonArray);
         }
-    }
+    }*/
 
 }

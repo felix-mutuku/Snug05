@@ -406,13 +406,13 @@ public class ApiConnector {
     }
 
     //used to get sliding ads from the database
-    public JSONArray GetSupermarketSlidingAds(String country, String foodjointName) {
+    public JSONArray GetFoodJointSlidingImages(String country, String foodjointName) {
         StringBuilder result = new StringBuilder();
         JSONArray jsonArray = null;
         HttpsURLConnection urlConnection = null;
 
         try {
-            URL url = new URL(Constants.BASE_URL_LOGIC + "getSlidingAds.php?country=" + country + "&foodjoint=" + foodjointName);
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getSlidingImages.php?country=" + country + "&foodjoint=" + foodjointName);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -452,7 +452,7 @@ public class ApiConnector {
         HttpsURLConnection urlConnection = null;
 
         try {
-            URL url = new URL(Constants.BASE_URL_LOGIC + "getAllFoodJoint.php?foodjointID=" + foodjointID);
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getAllFoodJointBranches.php?foodjointID=" + foodjointID);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -703,13 +703,13 @@ public class ApiConnector {
     }
 
     //used to get all the supermarket branches for the supermarket selected by the user
-    public JSONArray GetSubCategoryProducts(String country, String category, String subcategory) {
+    public JSONArray GetProducts(String country, String category) {
         StringBuilder result = new StringBuilder();
         JSONArray jsonArray = null;
         HttpsURLConnection urlConnection = null;
 
         try {
-            URL url = new URL(Constants.BASE_URL_LOGIC + "getSubCategoryProducts.php?country=" + country + "&category=" + category + "&subcategory=" + subcategory);
+            URL url = new URL(Constants.BASE_URL_LOGIC + "getProducts.php?country=" + country + "&category=" + category);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());

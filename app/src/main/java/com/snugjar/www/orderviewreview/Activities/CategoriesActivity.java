@@ -75,7 +75,7 @@ public class CategoriesActivity extends AppCompatActivity {
     private void initialize() {
         back.setText(SSupermarketName);
         //check category selected and set all sub-categories needed
-        switch (SCategory) {
+       /* switch (SCategory) {
             case "offers":
                 offersViewPager(viewPager);
                 tabs_layout.setupWithViewPager(viewPager);
@@ -151,10 +151,10 @@ public class CategoriesActivity extends AppCompatActivity {
             default:
                 onBackPressed();
                 break;
-        }
+        }*/
     }
 
-    private void offersViewPager(ViewPager viewPager) {
+   /* private void offersViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, SCategory, getString(R.string.all)), "All");
         adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, SCategory, getString(R.string.weekly)), "Weekly");
@@ -396,7 +396,7 @@ public class CategoriesActivity extends AppCompatActivity {
         adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, SCategory, getString(R.string.men_shaving)), "Men's Shaving");
         adapter.addFrag(new CategoriesFragment(SCountry, SSupermarketID, SSupermarketName, SCategory, getString(R.string.adult_diapers)), "Adult Diapers");
         viewPager.setAdapter(adapter);
-    }
+    }*/
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

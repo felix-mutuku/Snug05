@@ -259,7 +259,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                     if (!response.equals("Failed")) {
                         //orderID assigned successfully for the user to use
                         //add orderID to shared preferences for continuous use
-                        orderID = response;
+                        orderID = response.replaceAll(" ", "_");
                         //update sharedPreferences correctly
                         SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();

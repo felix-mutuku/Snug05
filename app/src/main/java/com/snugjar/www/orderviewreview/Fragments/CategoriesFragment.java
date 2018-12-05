@@ -2,6 +2,7 @@ package com.snugjar.www.orderviewreview.Fragments;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -28,20 +29,21 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 @SuppressLint("ValidFragment")
 public class CategoriesFragment extends Fragment {
-    String supermarketID, supermarketName, supermarketCategory, supermarketSubcategory, supermarketCountry;
+    String supermarketID, supermarketName, supermarketCategory, supermarketCountry;
     ConnectivityManager cManager;
     NetworkInfo nInfo;
     RecyclerView recycler_view;
     LinearLayout linear_available;
+    Dialog Dloading_dialog;
     SwipeRefreshLayout swipe_refresh_layout;
 
-    public CategoriesFragment(String sCountry, String sSupermarketID, String sSupermarketName, String sCategory, String sSubCategory) {
+    public CategoriesFragment(String sCountry, String sSupermarketID, String sSupermarketName, String sCategory, Dialog loading_dialog) {
         //get strings from activity for correct loading of categories selected
         supermarketID = sSupermarketID;
         supermarketName = sSupermarketName;
         supermarketCategory = sCategory;
-        supermarketSubcategory = sSubCategory;
         supermarketCountry = sCountry;
+        Dloading_dialog = loading_dialog;
     }
 
     @Override
@@ -80,13 +82,15 @@ public class CategoriesFragment extends Fragment {
         //show user that something is definitely happening
         swipe_refresh_layout.setRefreshing(true);
         //check to see whether user wants all products in category or a specific subcategory
-        if (supermarketSubcategory.equals(getString(R.string.all))) {
+        /*if (supermarketSubcategory.equals(getString(R.string.all))) {
             //for all categories
             new GetAllCategoryProducts().execute(new ApiConnector());
         } else {
             //for subcategory in a category
             new GetSubCategoryProducts().execute(new ApiConnector());
-        }
+        }*/
+
+        new GetCategoryProducts().execute(new ApiConnector());
     }
 
     public void setProductsAdapter(JSONArray jsonArray) {
@@ -94,6 +98,7 @@ public class CategoriesFragment extends Fragment {
         recycler_view.setLayoutManager(staggeredGridLayoutManager);
         try {
             recycler_view.setAdapter(new ProductsAdapter(jsonArray, getActivity(), recycler_view, supermarketID, supermarketName));
+            Dloading_dialog.dismiss();
             if (jsonArray == null) {
                 linear_available.setVisibility(View.VISIBLE);
                 //swipe_refresh_layout.setVisibility(View.VISIBLE);
@@ -106,7 +111,7 @@ public class CategoriesFragment extends Fragment {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
+    /*@SuppressLint("StaticFieldLeak")
     private class GetAllCategoryProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
@@ -122,14 +127,14 @@ public class CategoriesFragment extends Fragment {
         protected void onPostExecute(JSONArray jsonArray) {
             setProductsAdapter(jsonArray);
         }
-    }
+    }*/
 
     @SuppressLint("StaticFieldLeak")
-    private class GetSubCategoryProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
+    private class GetCategoryProducts extends AsyncTask<ApiConnector, Long, JSONArray> {
         @Override
         protected JSONArray doInBackground(ApiConnector... params) {
             try {
-                return params[0].GetSubCategoryProducts(supermarketCountry, supermarketCategory, supermarketSubcategory);
+                return params[0].GetProducts(supermarketCountry, supermarketCategory);
             } catch (Exception e) {
                 e.printStackTrace();
             }

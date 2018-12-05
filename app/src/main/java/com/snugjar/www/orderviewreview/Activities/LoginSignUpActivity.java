@@ -61,7 +61,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
     AVLoadingIndicatorView loading;
     String phone_IMEI, Scountry, Sname, Semail, SpersonID, Sphone, Stype;
     Uri Sphoto;
-    Dialog dialog;
+    Dialog login_dialog;
     public boolean isLoggedin;
     TextView terms_txt;
 
@@ -397,6 +397,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //User cancelled the dialog
                                     dialog.dismiss();
+                                    login_dialog.dismiss();
                                 }
                             });
                     builder.show();
@@ -470,22 +471,22 @@ public class LoginSignUpActivity extends AppCompatActivity {
 
     private void displayConfirmDialog() {
         //declaring the dialog items displayed
-        dialog = new Dialog(LoginSignUpActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_login);
+        login_dialog = new Dialog(LoginSignUpActivity.this);
+        login_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        login_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        login_dialog.setCancelable(false);
+        login_dialog.setContentView(R.layout.dialog_login);
 
-        ImageView profile_image = dialog.findViewById(R.id.profile_image);
-        final ImageView close_dialog = dialog.findViewById(R.id.close_dialog);
-        EditText personName = dialog.findViewById(R.id.personName);
-        EditText personEmail = dialog.findViewById(R.id.personEmail);
-        EditText personCountry = dialog.findViewById(R.id.personCountry);
-        final EditText personPhone = dialog.findViewById(R.id.personPhone);
-        final Button confirm_details = dialog.findViewById(R.id.confirm_details);
-        final AVLoadingIndicatorView loading_dialog = dialog.findViewById(R.id.loading_dialog);
-        final CheckBox terms_checkbox = dialog.findViewById(R.id.terms_checkbox);
-        TextView terms_text = dialog.findViewById(R.id.terms_text);
+        ImageView profile_image = login_dialog.findViewById(R.id.profile_image);
+        final ImageView close_dialog = login_dialog.findViewById(R.id.close_dialog);
+        EditText personName = login_dialog.findViewById(R.id.personName);
+        EditText personEmail = login_dialog.findViewById(R.id.personEmail);
+        EditText personCountry = login_dialog.findViewById(R.id.personCountry);
+        final EditText personPhone = login_dialog.findViewById(R.id.personPhone);
+        final Button confirm_details = login_dialog.findViewById(R.id.confirm_details);
+        final AVLoadingIndicatorView loading_dialog = login_dialog.findViewById(R.id.loading_dialog);
+        final CheckBox terms_checkbox = login_dialog.findViewById(R.id.terms_checkbox);
+        TextView terms_text = login_dialog.findViewById(R.id.terms_text);
 
         //make confirm button invisible until user confirms the terms and conditions
         confirm_details.setVisibility(View.GONE);
@@ -660,7 +661,7 @@ public class LoginSignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //close dialog
-                dialog.dismiss();
+                login_dialog.dismiss();
             }
         });
 
@@ -688,6 +689,6 @@ public class LoginSignUpActivity extends AppCompatActivity {
             }
         });
 
-        dialog.show();
+        login_dialog.show();
     }
 }

@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="start"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/steak"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="left|center" />
@@ -25,7 +25,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="end"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/broccoli"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="right|center" />

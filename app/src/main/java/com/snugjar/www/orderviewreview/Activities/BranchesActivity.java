@@ -515,8 +515,8 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
             try {
                 JSONObject jsonObject = this.dataArray.getJSONObject(position);
 
-                String branch = String.format("%s %s", jsonObject.getString("supermarket"),
-                        jsonObject.getString("supermarket_branch"));
+                String branch = String.format("%s %s", jsonObject.getString("foodjoint"),
+                        jsonObject.getString("foodjoint_branch"));
                 String openingTime = jsonObject.getString("opening_time");
                 String closingTime = jsonObject.getString("closing_time");
                 openingTime = openingTime.replaceAll(":", "");
@@ -546,8 +546,8 @@ public class BranchesActivity extends AppCompatActivity implements GoogleApiClie
                             String available = holder.supermarket_availability.getText().toString();
                             BLatitude = json2Object.getString("latitude");
                             BLongitude = json2Object.getString("longitude");
-                            SBranchSelected = String.format("%s %s", json2Object.getString("supermarket"),
-                                    json2Object.getString("supermarket_branch"));
+                            SBranchSelected = String.format("%s %s", json2Object.getString("foodjoint"),
+                                    json2Object.getString("foodjoint_branch"));
 
                             if (available.equals("Open")) {
                                 //open supermarket clicked by the user
